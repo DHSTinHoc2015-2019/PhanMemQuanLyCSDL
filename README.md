@@ -1,7 +1,7 @@
 # PhanMemQuanLyCSDL
 Xây dựng phần mềm quản lý CSDL
 
-- Clone project: *git clone https://github.com/DHSTinHoc2015-2019/XDPMQLCSDL.git*
+- Clone project: *git clone https://github.com/DHSTinHoc2015-2019/PhanMemQuanLyCSDL.git*
 - *cd XDPMQLCSDL/CodeLaravel*
 - *composer install*
 - Copy .env.example to .env:<br/>
