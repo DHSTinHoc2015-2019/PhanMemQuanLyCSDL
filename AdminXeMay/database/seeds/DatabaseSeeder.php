@@ -360,6 +360,141 @@ class DatabaseSeeder extends Seeder
         }
 
 
+        //Seed for table loai_phu_tungs
+        DB::table('loai_phu_tungs')->insert([
+            'tenphutung' => 'Lốp xe',
+            'donvitinh' => 'Cái',
+            'imgphutung' => 'LopXe.jpg',
+            'created_at' => date("Y-m-d"),
+        ]); 
+
+        DB::table('loai_phu_tungs')->insert([
+            'tenphutung' => 'Ắc quy',
+            'donvitinh' => 'Cái',
+            'imgphutung' => 'AcQuy.jpg',
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('loai_phu_tungs')->insert([
+            'tenphutung' => 'Bugi',
+            'donvitinh' => 'Cái',
+            'imgphutung' => 'Bugi.jpg',
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('loai_phu_tungs')->insert([
+            'tenphutung' => 'Má phanh',
+            'donvitinh' => 'Cái',
+            'imgphutung' => 'MaPhanh.jpg',
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('loai_phu_tungs')->insert([
+            'tenphutung' => 'Nhông xích',
+            'donvitinh' => 'Cái',
+            'imgphutung' => 'NhongXich.jpg',
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('loai_phu_tungs')->insert([
+            'tenphutung' => 'Tấm lọc gió',
+            'donvitinh' => 'Cái',
+            'imgphutung' => 'TamLocGio.jpg',
+            'created_at' => date("Y-m-d"),
+        ]);
+
+
+        //Seed for table thong_tin_phu_tungs
+        DB::table('phu_tungs')->insert([
+            'id_loaiphutung' => 1,
+            'loaixe' => 'Air blade 125',
+            'soluong' => 5,
+            'dongia' => 100000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('phu_tungs')->insert([
+            'id_loaiphutung' => 1,
+            'loaixe' => 'Click',
+            'soluong' => 5,
+            'dongia' => 100000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('phu_tungs')->insert([
+            'id_loaiphutung' => 1,
+            'loaixe' => 'LEAD 110',
+            'soluong' => 5,
+            'dongia' => 100000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('phu_tungs')->insert([
+            'id_loaiphutung' => 1,
+            'loaixe' => 'Future 125; Wave RSX 110; Blade 110; Super Dream 110; Wave alpha 100',
+            'soluong' => 5,
+            'dongia' => 100000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('phu_tungs')->insert([
+            'id_loaiphutung' => 1,
+            'loaixe' => 'SH Mode 125',
+            'soluong' => 5,
+            'dongia' => 100000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+           //Seed for table nhap_phu_tung_phu_kiens
+        for ($i=0; $i < 5; $i++) { 
+            DB::table('nhap_phu_tung_phu_kiens')->insert([
+                'id_nhanvien' => 6,
+                'id_nhacungcap' => 1,
+                'created_at' => date("Y-m-d"),
+            ]);
+        }
+
+        //Seed for table chi_tiet_nhap_phu_tungs
+        DB::table('chi_tiet_nhap_phu_tungs')->insert([
+            'id_nhapphutungphukien' => 1,
+            'id_phutung' => 1,
+            'soluong' => 3,
+            'gianhap' => 350000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('chi_tiet_nhap_phu_tungs')->insert([
+            'id_nhapphutungphukien' => 1,
+            'id_phutung' => 2,
+            'soluong' => 4,
+            'gianhap' => 307000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('chi_tiet_nhap_phu_tungs')->insert([
+            'id_nhapphutungphukien' => 1,
+            'id_phutung' => 3,
+            'soluong' => 5,
+            'gianhap' => 319000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('chi_tiet_nhap_phu_tungs')->insert([
+            'id_nhapphutungphukien' => 1,
+            'id_phutung' => 4,
+            'soluong' => 6,
+            'gianhap' => 253000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('chi_tiet_nhap_phu_tungs')->insert([
+            'id_nhapphutungphukien' => 1,
+            'id_phutung' => 5,
+            'soluong' => 7,
+            'gianhap' => 392000,
+            'created_at' => date("Y-m-d"),
+        ]);
+
      //    //Seed for table bao_hanhs
      //    DB::table('bao_hanhs')->insert([
      //        'id_khachhang' => 1,
@@ -377,124 +512,8 @@ class DatabaseSeeder extends Seeder
      //        'created_at' => date("Y-m-d"),
      //    ]);
 
-     //    //Seed for table nhap_phu_tung_phu_kiens
-     //    for ($i=0; $i < 5; $i++) { 
-     //        DB::table('nhap_phu_tung_phu_kiens')->insert([
-     //            'id_nhanvien' => 7,
-     //            'id_nhacungcap' => 1,
-     //            'created_at' => date("Y-m-d"),
-     //        ]);
-     //    }
 
 
-     //    //Seed for table loai_phu_tungs
-     //    DB::table('loai_phu_tungs')->insert([
-     //        'tenloaiphutung' => 'Lốp xe',
-     //        'imgphutung' => 'LopXe.jpg',
-     //        'created_at' => date("Y-m-d"),
-     //    ]); 
-
-     //    DB::table('loai_phu_tungs')->insert([
-     //        'tenloaiphutung' => 'Ắc quy',
-     //        'imgphutung' => 'AcQuy.jpg',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('loai_phu_tungs')->insert([
-     //        'tenloaiphutung' => 'Bugi',
-     //        'imgphutung' => 'Bugi.jpg',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('loai_phu_tungs')->insert([
-     //        'tenloaiphutung' => 'Má phanh',
-     //        'imgphutung' => 'MaPhanh.jpg',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('loai_phu_tungs')->insert([
-     //        'tenloaiphutung' => 'Nhông xích',
-     //        'imgphutung' => 'NhongXich.jpg',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('loai_phu_tungs')->insert([
-     //        'tenloaiphutung' => 'Tấm lọc gió',
-     //        'imgphutung' => 'TamLocGio.jpg',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    //Seed for table thong_tin_phu_tungs
-     //    DB::table('thong_tin_phu_tungs')->insert([
-     //        'id_loaiphutung' => 1,
-     //        'loaixe' => 'Air blade 125',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('thong_tin_phu_tungs')->insert([
-     //        'id_loaiphutung' => 1,
-     //        'loaixe' => 'Click',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('thong_tin_phu_tungs')->insert([
-     //        'id_loaiphutung' => 1,
-     //        'loaixe' => 'LEAD 110',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('thong_tin_phu_tungs')->insert([
-     //        'id_loaiphutung' => 1,
-     //        'loaixe' => 'Future 125; Wave RSX 110; Blade 110; Super Dream 110; Wave alpha 100',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('thong_tin_phu_tungs')->insert([
-     //        'id_loaiphutung' => 1,
-     //        'loaixe' => 'SH Mode 125',
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    //Seed for table chi_tiet_nhap_phu_tungs
-     //    DB::table('chi_tiet_nhap_phu_tungs')->insert([
-     //        'id_nhapphutungphukien' => 1,
-     //        'id_thongtinphutung' => 1,
-     //        'soluong' => 3,
-     //        'gianhap' => 350000,
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('chi_tiet_nhap_phu_tungs')->insert([
-     //        'id_nhapphutungphukien' => 1,
-     //        'id_thongtinphutung' => 2,
-     //        'soluong' => 4,
-     //        'gianhap' => 307000,
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('chi_tiet_nhap_phu_tungs')->insert([
-     //        'id_nhapphutungphukien' => 1,
-     //        'id_thongtinphutung' => 3,
-     //        'soluong' => 5,
-     //        'gianhap' => 319000,
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('chi_tiet_nhap_phu_tungs')->insert([
-     //        'id_nhapphutungphukien' => 1,
-     //        'id_thongtinphutung' => 4,
-     //        'soluong' => 6,
-     //        'gianhap' => 253000,
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
-
-     //    DB::table('chi_tiet_nhap_phu_tungs')->insert([
-     //        'id_nhapphutungphukien' => 1,
-     //        'id_thongtinphutung' => 5,
-     //        'soluong' => 7,
-     //        'gianhap' => 392000,
-     //        'created_at' => date("Y-m-d"),
-     //    ]);
 
 
      //    //Seed for table thong_tin_phu_kiens

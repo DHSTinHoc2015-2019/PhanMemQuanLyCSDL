@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <b>Chi tiết nhập xe máy</b><small>{{ $id_nhapxemay }}</small>
+        <b>Hóa đơn bán xe máy</b><small></small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Admin</a></li>
-        <li>Chi tiết nhập xe máy</li>
+        <li>Hóa đơn bán xe máy</li>
       </ol>
     </section>
 
@@ -27,12 +27,12 @@
             <div class="box-header">
               <h3 class="box-title">Danh sách</h3>
               <div class="pull-right">
-                <a class="btn btn-info" href="chitietnhapxemay/{{ $id_nhapxemay }}/them">
+                <a class="btn btn-info" href="hoadonbanxemay/them">
                   <i class="fa fa-plus-square"></i> Thêm
                 </a>
-                <a class="btn btn-primary" href="chitietnhapxemay/{{ $id_nhapxemay }}/view">
-                  <i class="fa fa-times"></i> Xem phiếu nhập
-                </a>
+                <a class="btn btn-warning" href="hoadonbanxemay/viewPDF" target="blank">
+                <i class="fa fa-print"></i> In danh sách
+              </a>
              </div>
             </div>
             <!-- /.box-header -->
@@ -41,56 +41,66 @@
                 <thead>
                  <tr>
                   <th>ID</th>
-                  <th>Mã nhập xe</th>
+                  <th>Tên KH</th>
+                  <th>Địa chỉ</th>
                   <th>Tên xe</th>
                   <th>Màu xe</th>
-                  <th>Dung tích</th>
-                  <th>Đơn giá nhập</th>
-                  <th>Số lượng</th>
-                  <th>Đơn vị tính</th>
+                  <th>Đơn giá</th>
+                  <th>SL</th>
+                  <th>Thuế VAT</th>
+                  <th>Thành tiền</th>
                   <th>Hình ảnh</th>
-                  <th>Chỉnh sửa</th>
+                  <th>Sửa</th>
                   <th>Xóa</th>
+                  <th>In</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($chitietnhapxe as $chitietnhapxe)
+                @foreach($hoadonbanxemay as $hoadonbanxemay)
                 <tr>
-                  <td>{{ $chitietnhapxe->id }}</td>
-                  <td>{{ $chitietnhapxe->id_nhapxemay }}</td>
-                  <td>{{ $chitietnhapxe->tenxe }}</td>
-                  <td>{{ $chitietnhapxe->mauxe }}</td>
-                  <td>{{ $chitietnhapxe->dungtichxylanh }}</td>
-                  <td>{{ number_format($chitietnhapxe->dongianhap, 0, '', '.') }}đ</td>
-                  <td>{{ $chitietnhapxe->soluong }}</td>
-                  <td>{{ $chitietnhapxe->donvitinh }}</td>
+                  <td>{{ $hoadonbanxemay->id }}</td>
+                  <td>{{ $hoadonbanxemay->tenkhachhang }}</td>
+                  <td>{{ $hoadonbanxemay->diachi }}</td>
+                  <td>{{ $hoadonbanxemay->tenxe }}</td>
+                  <td>{{ $hoadonbanxemay->mauxe }}</td>
+                  <td>{{ number_format($hoadonbanxemay->dongia , 0, '', '.') }}đ</td>
+                  <td>{{ $hoadonbanxemay->soluong }}</td>
+                  <td>{{ $hoadonbanxemay->thueVAT }}</td>
+                  <td>{{ number_format(($hoadonbanxemay->dongia + $hoadonbanxemay->dongia * $hoadonbanxemay->thueVAT / 100) * $hoadonbanxemay->soluong , 0, '', '.') }}đ</td>
                   <td>
-                    <a href="uploads/xemay/{{ $chitietnhapxe->img }}"><img src="uploads/xemay/{{ $chitietnhapxe->img }}" width="100" height="60"></a>
+                    <a href="uploads/xemay/{{ $hoadonbanxemay->img }}"><img src="uploads/xemay/{{ $hoadonbanxemay->img }}" width="100" height="60"></a>
                   </td>
                   <td>
-                    <a class="btn btn-success" href="chitietnhapxemay/{{ $id_nhapxemay }}/sua/{{ $chitietnhapxe->id }}">
-                      <i class="fa fa-edit"></i> Chỉnh sửa
+                    <a class="btn btn-success" href="hoadonbanxemay/sua/{{ $hoadonbanxemay->id }}">
+                      <i class="fa fa-edit"></i>
                     </a>
                   </td>
                   <td>
-                    <button class="btn btn-danger" onclick="Delete({{ $id_nhapxemay }},{{ $chitietnhapxe->id }});"><i class="fa fa-trash"></i> Xóa</button>
-                  </td> 
+                    <button class="btn btn-danger" onclick="Delete({{ $hoadonbanxemay->id }});"><i class="fa fa-trash"></i></button>
+                  </td>
+                   <td>
+                     <a class="btn btn-warning" href="hoadonbanxemay/in/{{ $hoadonbanxemay->id }}" target="blank">
+                      <i class="fa fa-print"></i>
+                    </a>
+                  </td>
                 </tr>
                 @endforeach
                 </tbody>
                 <tfoot>
                 <tr>
                   <th>ID</th>
-                  <th>Mã nhập xe</th>
+                  <th>Tên KH</th>
+                  <th>Địa chỉ</th>
                   <th>Tên xe</th>
                   <th>Màu xe</th>
-                  <th>Dung tích</th>
-                  <th>Đơn giá nhập</th>
-                  <th>Số lượng</th>
-                  <th>Đơn vị tính</th>
+                  <th>Đơn giá</th>
+                  <th>SL</th>
+                  <th>Thuế VAT</th>
+                  <th>Thành tiền</th>
                   <th>Hình ảnh</th>
-                  <th>Chỉnh sửa</th>
+                  <th>Sửa</th>
                   <th>Xóa</th>
+                  <th>In</th>
                 </tr>
                 </tfoot>
               </table>
@@ -128,7 +138,7 @@
         'autoWidth'   : false
       })
     });
-    function Delete(id, id_chitiet) {
+    function Delete(id) {
       swal({
         title: "Bạn có chắc chắn muốn xóa dữ liệu?",
         text: "Sau khi xóa, bạn sẽ không thể phục hồi dữ liệu này!",
@@ -138,7 +148,7 @@
       })
       .then((isConfirm) => {
         if (isConfirm) {
-          window.location.href = "chitietnhapxemay/"+ id +"/xoa/" + id_chitiet;
+          window.location.href = "hoadonbanxemay/xoa/" + id;
         } else {
           swal("Dữ liệu của bạn không thay đổi!");
         }

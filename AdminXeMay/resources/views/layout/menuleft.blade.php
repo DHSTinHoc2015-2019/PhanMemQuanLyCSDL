@@ -101,7 +101,7 @@
           <ul class="treeview-menu">
             <li><a href="nhapxemay"><i class="fa fa-motorcycle"></i>Phiếu nhập xe máy</a></li>
             <li><a href="nhapphutungphukien"><i class="fa fa-gears"></i>Phiếu nhập phụ tùng - phụ kiện</a></li>
-            <li><a href="#"><i class="fa fa-motorcycle"></i>Hóa đơn bán xe máy</a></li>
+            <li><a href="hoadonbanxemay"><i class="fa fa-motorcycle"></i>Hóa đơn bán xe máy</a></li>
             <li><a href="#"><i class="fa fa-gears"></i>Hóa đơn bán phụ tùng - phụ kiện</a></li>
           </ul>
         </li>
