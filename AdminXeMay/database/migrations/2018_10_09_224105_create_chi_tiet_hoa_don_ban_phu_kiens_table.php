@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateChiTietHoaDonBanPhuTungsTable extends Migration
+class CreateChiTietHoaDonBanPhuKiensTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateChiTietHoaDonBanPhuTungsTable extends Migration
      */
     public function up()
     {
-        Schema::create('chi_tiet_hoa_don_ban_phu_tungs', function (Blueprint $table) {
+        Schema::create('chi_tiet_hoa_don_ban_phu_kiens', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_banphutungphukien')->unsigned();
             $table->foreign('id_banphutungphukien')->references('id')->on('hoa_don_ban_phu_tung_phu_kiens');
-            $table->integer('id_phutung')->unsigned();
-            $table->foreign('id_phutung')->references('id')->on('phu_tungs');
+            $table->integer('id_phukien')->unsigned();
+            $table->foreign('id_phukien')->references('id')->on('phu_kiens');
             $table->integer('dongiaban');
             $table->integer('soluongban');
             $table->timestamps();
@@ -32,6 +32,6 @@ class CreateChiTietHoaDonBanPhuTungsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('chi_tiet_hoa_don_ban_phu_tungs');
+        Schema::dropIfExists('chi_tiet_hoa_don_ban_phu_kiens');
     }
 }

@@ -60,9 +60,9 @@
                 <td>{{ $chitietnhapphutung->id }}</td>
                 <td>{{ $chitietnhapphutung->tenphutung }}</td>
                 <td>{{ $chitietnhapphutung->loaixe }}</td>
-                <td>{{ $chitietnhapphutung->soluong }}</td>
+                <td>{{ $chitietnhapphutung->soluongnhap }}</td>
                 <td>{{ number_format($chitietnhapphutung->gianhap, 0, '', '.') }} đ</td>
-                <td>{{ number_format($chitietnhapphutung->gianhap * $chitietnhapphutung->soluong, 0, '', '.') }} đ</td>
+                <td>{{ number_format($chitietnhapphutung->gianhap * $chitietnhapphutung->soluongnhap, 0, '', '.') }} đ</td>
                 <td>
                   <a href="uploads/phutung/{{ $chitietnhapphutung->imgphutung }}"><img src="uploads/phutung/{{ $chitietnhapphutung->imgphutung }}" width="100" height="60"></a>
                 </td>

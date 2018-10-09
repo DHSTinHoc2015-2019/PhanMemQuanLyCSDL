@@ -1,0 +1,1 @@
+Laravel, MongoDB, Redis, ElaticSearch, Vuejs, Bootstrap, Passport, Sinatra log, Pusher, Mailgun, Amazon S3, Stripe

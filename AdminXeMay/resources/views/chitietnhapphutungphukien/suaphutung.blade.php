@@ -54,7 +54,7 @@
                 </div>
                 <div class="form-group">
                   <label>Số lượng</label>
-                  <input type="number" class="form-control" placeholder="Nhập số lượng" name="soluong" value="{{ $chitietnhapphutung->soluong }}">
+                  <input type="number" class="form-control" placeholder="Nhập số lượng" name="soluong" value="{{ $chitietnhapphutung->soluongnhap }}">
                 </div>
                 <div class="form-group">
                   <label>Giá nhập</label>

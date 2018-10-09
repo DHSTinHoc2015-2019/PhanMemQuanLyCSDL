@@ -17,7 +17,7 @@ class ChiTietNhapPhuTungController extends Controller
         $chitietnhapphutung = new ChiTietNhapPhuTung();
         $chitietnhapphutung->id_nhapphutungphukien = $id_nhapphutungphukien;
         $chitietnhapphutung->id_phutung = $request->id_phutung;
-        $chitietnhapphutung->soluong = $request->soluong;
+        $chitietnhapphutung->soluongnhap = $request->soluong;
         $chitietnhapphutung->gianhap = $request->gianhap;
         $chitietnhapphutung->save();
         return redirect('nhapphutungphukien/'. $id_nhapphutungphukien.'/danhsachchitiet')->with('thongbaothem', "Thêm dữ liệu thành công!");
@@ -34,7 +34,7 @@ class ChiTietNhapPhuTungController extends Controller
         $chitietnhapphutung = ChiTietNhapPhuTung::findOrFail($id);
         $chitietnhapphutung->id_nhapphutungphukien = $id_nhapphutungphukien;
         $chitietnhapphutung->id_phutung = $request->id_phutung;
-        $chitietnhapphutung->soluong = $request->soluong;
+        $chitietnhapphutung->soluongnhap = $request->soluong;
         $chitietnhapphutung->gianhap = $request->gianhap;
         $chitietnhapphutung->save();
         return redirect('nhapphutungphukien/'. $id_nhapphutungphukien.'/danhsachchitiet')->with('thongbaosua', "Sửa dữ liệu thành công!");
