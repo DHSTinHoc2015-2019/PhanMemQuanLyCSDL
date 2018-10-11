@@ -103,7 +103,7 @@
 <!-- /.content -->
 
 <!-- Main content -->
-{{--
+
 <section class="content">
   <div class="row">
     <div class="col-xs-12">
@@ -111,16 +111,16 @@
         <div class="box-header">
           <h3 class="box-title">Danh sách chi tiết nhập phụ kiện <span style="font-weight: bold; font-size: 14px;">Mã nhập: {{ $id_nhapphutungphukien }}</span></h3>
           <div class="pull-right">
-            <a class="btn btn-info" href="chitietnhapphutungphukien/{{ $id_nhapphutungphukien }}/themchitietphutung">
-              <i class="fa fa-plus-square"></i> Thêm chi tiết phụ tùng
-            </a>
-            <a class="btn btn-info" href="chitietnhapphutungphukien/{{ $id_nhapphutungphukien }}/themchitietphukien">
-              <i class="fa fa-plus-square"></i> Thêm chi tiết phụ kiện
-            </a>
-            <a class="btn btn-warning" href="chitietnhapphutungphukien/in/{{ $id_nhapphutungphukien }}">
-              <i class="fa fa-print"></i> In phiếu nhập
-            </a>
-          </div>
+              <a class="btn btn-info" href="nhapphutungphukien/{{ $id_nhapphutungphukien }}/themchitietphutung">
+                <i class="fa fa-plus-square"></i> Thêm chi tiết phụ tùng
+              </a>
+              <a class="btn btn-info" href="nhapphutungphukien/{{ $id_nhapphutungphukien }}/themchitietphukien">
+                <i class="fa fa-plus-square"></i> Thêm chi tiết phụ kiện
+              </a>
+              <a class="btn btn-warning" href="nhapphutungphukien/in/{{ $id_nhapphutungphukien }}">
+                <i class="fa fa-print"></i> In phiếu nhập
+              </a>
+            </div>
         </div>
         <!-- /.box-header -->
         <div class="box-body">
@@ -128,10 +128,11 @@
             <thead>
              <tr>
               <th>ID</th>
-              <th>Tên xe</th>
               <th>Tên phụ kiện</th>
+              <th>Tên xe</th>
               <th>Số lượng</th>
               <th>Giá nhập</th>
+              <th>Thành tiền</th>
               <th>Hình ảnh</th>
               <th>Chỉnh sửa</th>
               <th>Xóa</th>
@@ -141,19 +142,20 @@
             @foreach($chitietnhapphukien as $chitietnhapphukien)
             <tr>
               <td>{{ $chitietnhapphukien->id }}</td>
-              <td>{{ $chitietnhapphukien->tenxe }}</td>
               <td>{{ $chitietnhapphukien->tenphukien }}</td>
-              <td>{{ $chitietnhapphukien->soluong }}</td>
+              <td>{{ $chitietnhapphukien->tenxe }}</td>
+              <td>{{ $chitietnhapphukien->soluongnhap }}</td>
               <td>{{ number_format($chitietnhapphukien->gianhap, 0, '', '.') }} đ</td>
+              <td>{{ number_format($chitietnhapphukien->gianhap * $chitietnhapphukien->soluongnhap, 0, '', '.') }} đ</td>
               <td>
                 <a href="uploads/phukien/{{ $chitietnhapphukien->imgphukien }}"><img src="uploads/phukien/{{ $chitietnhapphukien->imgphukien }}" width="100" height="60"></a>
               </td>
               <td>
-                <a class="btn btn-success" href="chitietnhapphutungphukien/{{ $id_nhapphutungphukien }}/suachitietphukien/{{ $chitietnhapphukien->id }}">
-                  <i class="fa fa-edit"></i> Chỉnh sửa
-                </a>
-              </td>
-              <td>
+                  <a class="btn btn-success" href="nhapphutungphukien/{{ $id_nhapphutungphukien }}/suachitietphukien/{{ $chitietnhapphukien->id }}">
+                    <i class="fa fa-edit"></i> Chỉnh sửa
+                  </a>
+                </td>
+                <td>
                   <button class="btn btn-danger" onclick="DeletePK({{ $id_nhapphutungphukien }},{{ $chitietnhapphukien->id }});"><i class="fa fa-trash"></i> Xóa</button>
                 </td>
             </tr>
@@ -162,10 +164,11 @@
           <tfoot>
             <tr>
               <th>ID</th>
-              <th>Tên xe</th>
               <th>Tên phụ kiện</th>
+              <th>Tên xe</th>
               <th>Số lượng</th>
               <th>Giá nhập</th>
+              <th>Thành tiền</th>
               <th>Hình ảnh</th>
               <th>Chỉnh sửa</th>
               <th>Xóa</th>
@@ -182,7 +185,7 @@
 <!-- /.row -->
 </section>
 <!-- /.content -->
---}}
+
 </div>
 <!-- /.content-wrapper -->
 
@@ -244,7 +247,7 @@
     })
     .then((isConfirm) => {
       if (isConfirm) {
-        window.location.href = "chitietnhapphutungphukien/" + id_nhapphutungphukien + "/xoachitietphukien/" + id;
+        window.location.href = "nhapphutungphukien/" + id_nhapphutungphukien + "/xoachitietphukien/" + id;
       } else {
         swal("Dữ liệu của bạn không thay đổi!");
       }

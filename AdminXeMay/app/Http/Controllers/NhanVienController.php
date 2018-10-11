@@ -9,6 +9,7 @@ use DateTime;
 use PDF;
 use DB;
 use Session;
+use Carbon\Carbon;
 
 class NhanVienController extends Controller
 {
@@ -178,6 +179,10 @@ class NhanVienController extends Controller
     }
 
     function postTimKiem(Request $request){
+    	$toantu = "";
+    	if($request->has("AND")) $toantu .= " AND ";
+    	else $toantu .= " OR ";
+
     	$query = "
     	SELECT nhan_viens.id, hoten, ngaysinh, gioitinh, socmnd, sodienthoai, quequan, chuoibaomat, img,luongcoban,hesoluong, phucap, tenchucvu, id_chucvu
 		FROM nhan_viens, chuc_vus
@@ -193,7 +198,7 @@ class NhanVienController extends Controller
             if($where == ''){
                 $where .= "((gioitinh like '%" . $request->gioitinh . "%')";
             } else{
-                $where .= ' ' . $request->radio1 . ' ' . "(gioitinh like '%" . $request->gioitinh . "%')";
+                $where .= ' ' . $toantu . ' ' . "(gioitinh like '%" . $request->gioitinh . "%')";
             }
         }
 
@@ -201,7 +206,7 @@ class NhanVienController extends Controller
             if($where == ''){
                 $where .= "((id_chucvu = " . $request->id_chucvu . ")";
             } else{
-                $where .= ' ' . $request->radio2 . ' ' . "(id_chucvu = " . $request->id_chucvu . ")";
+                $where .= ' ' . $toantu . ' ' . "(id_chucvu = " . $request->id_chucvu . ")";
             }
         }
 
@@ -209,7 +214,7 @@ class NhanVienController extends Controller
             if($where == ''){
                 $where .= "((quequan like '%" . $request->quequan . "%')";
             } else{
-                $where .= ' ' . $request->radio3 . ' ' . "(quequan like '%" . $request->quequan . "%')";
+                $where .= ' ' . $toantu . ' ' . "(quequan like '%" . $request->quequan . "%')";
             }
         }
 
@@ -217,7 +222,7 @@ class NhanVienController extends Controller
             if($where == ''){
                 $where .= "((YEAR(ngaysinh) BETWEEN " . $request->namsinhtu . " AND " . $request->namsinhden . ")";
             } else{
-                $where .= ' ' . $request->radio4 . ' ' . "((YEAR(ngaysinh) BETWEEN " . $request->namsinhtu . " AND " . $request->namsinhden . ")";
+                $where .= ' ' . $toantu . ' ' . "((YEAR(ngaysinh) BETWEEN " . $request->namsinhtu . " AND " . $request->namsinhden . "))";
             }
         }
 
@@ -225,7 +230,7 @@ class NhanVienController extends Controller
             if($where == ''){
                 $where .= "(((luongcoban * hesoluong + phucap) BETWEEN " . $request->luongtu . " AND " . $request->luongden . ")";
             } else{
-                $where .= ' ' . $request->radio5 . ' ' . "((luongcoban * hesoluong + phucap) BETWEEN " . $request->luongtu . " AND " . $request->luongden . ")";
+                $where .= ' ' . $toantu . ' ' . "((luongcoban * hesoluong + phucap) BETWEEN " . $request->luongtu . " AND " . $request->luongden . ")";
             }
         }
 
@@ -389,15 +394,17 @@ class NhanVienController extends Controller
         ->where('nhan_viens.id_chucvu', $request->chucvu)
         ->get();
         $sum = $nhanvien->count();
+        $tenchucvu = "";
         if($sum > 0){
         	Session::put('queryThongKeChucVu', $nhanvien);
+        	$tenchucvu = $nhanvien[0]->tenchucvu;
         } else {
         	 Session::forget('queryThongKeChucVu');
         }
         $count = NhanVien::all()->count();
         $tile = round($sum / $count * 100, 2);
-       $chucvu = ChucVu::all();
-		return view('thongkenhanvien.chucvu', compact('nhanvien','chucvu', 'sum', 'tile'));
+        $chucvu = ChucVu::all();
+		return view('thongkenhanvien.chucvu', compact('nhanvien','chucvu', 'sum', 'tile', 'tenchucvu'));
 	}
 
 	function getxemThongKeChucVuPDF(){
@@ -416,7 +423,7 @@ class NhanVienController extends Controller
 			<head>
 				<meta charset="UTF-8">
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-				<title>Document</title>
+				<title>Danh sách thống kê nhân viên</title>
 				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
 				<style>
 				*{ 
@@ -427,6 +434,259 @@ class NhanVienController extends Controller
 			</head>
 			<body>
 				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN <br> CÓ CHỨC VỤ '.  $nhanvien[0]->tenchucvu .'</h1></center>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+					}
+
+					$output .= '
+					</tbody>
+
+				</table>
+			</body>
+			</html>';
+		return $output;
+	}
+
+	function getThongKeGioiTinh(){
+		$nhanvien = NhanVien::danhSach();
+		$chucvu = ChucVu::all();
+		return view('thongkenhanvien.gioitinh', compact('nhanvien','chucvu'));
+	}
+
+	function postThongKeGioiTinh(Request $request){
+		$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+        ->where('gioitinh','like', "%". $request->gioitinh ."%")
+        ->get();
+        $sum = $nhanvien->count();
+        $gioitinh = "";
+        if($sum > 0){
+        	Session::put('queryThongKeGioiTinh', $nhanvien);
+        	$gioitinh = $request->gioitinh;
+        } else {
+        	 Session::forget('queryThongKeGioiTinh');
+        }
+        $count = NhanVien::all()->count();
+        $tile = round($sum / $count * 100, 2);
+		return view('thongkenhanvien.gioitinh', compact('nhanvien', 'sum', 'tile', 'gioitinh'));
+	}
+
+	function getxemThongKeGioiTinhPDF(){
+		$nhanvien = session('queryThongKeGioiTinh');;
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->loadHTML($this->data_to_html_thongKeGioiTinh($nhanvien));
+		return $pdf->stream();
+	}
+
+	function data_to_html_thongKeGioiTinh($nhanvien){
+		$output = '<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>Danh sách thống kê nhân viên</title>
+				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+				<style>
+				*{ 
+					font-family: DejaVu Sans !important; 
+					font-size: 12px;
+				}
+			</style>
+			</head>
+			<body>
+				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN <br> CÓ GIỚI TÍNH '.  $nhanvien[0]->gioitinh .'</h1></center>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+					}
+
+					$output .= '
+					</tbody>
+
+				</table>
+			</body>
+			</html>';
+		return $output;
+	}
+
+	function getThongKeTuoi(){
+		$nhanvien = NhanVien::danhSach();
+		return view('thongkenhanvien.tuoi', compact('nhanvien'));
+	}
+
+	function postThongKeTuoi(Request $request){
+		$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+        ->whereYear('ngaysinh', '>=', Carbon::now()->year - $request->tuoiden)
+        ->whereYear('ngaysinh', '<=', Carbon::now()->year - $request->tuoitu)
+        ->get();
+        $sum = $nhanvien->count();
+        $tuoi = "";
+        if($sum > 0){
+        	Session::put('queryThongKeTuoi', $nhanvien);
+        	$tuoi = $request->tuoitu . " đến " .$request->tuoiden;
+        } else {
+        	 Session::forget('queryThongKeTuoi');
+        }
+        $count = NhanVien::all()->count();
+        $tile = round($sum / $count * 100, 2);
+		return view('thongkenhanvien.tuoi', compact('nhanvien', 'sum', 'tile', 'tuoi'));
+	}
+
+	function getxemThongKeTuoiPDF(){
+		$nhanvien = session('queryThongKeTuoi');;
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->loadHTML($this->data_to_html_thongKeTuoi($nhanvien));
+		return $pdf->stream();
+	}
+
+	function data_to_html_thongKeTuoi($nhanvien){
+		$output = '<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>Danh sách thống kê nhân viên</title>
+				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+				<style>
+				*{ 
+					font-family: DejaVu Sans !important; 
+					font-size: 12px;
+				}
+			</style>
+			</head>
+			<body>
+				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN</h1></center>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+					}
+
+					$output .= '
+					</tbody>
+
+				</table>
+			</body>
+			</html>';
+		return $output;
+	}
+
+	function getThongKeLuong(){
+		$nhanvien = NhanVien::danhSach();
+		return view('thongkenhanvien.luong', compact('nhanvien'));
+	}
+
+	function postThongKeLuong(Request $request){
+		$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+        ->whereRaw('luongcoban * hesoluong + phucap >= '. $request->luongtu)
+        ->whereRaw('luongcoban * hesoluong + phucap <= '. $request->luongden)
+        ->get();
+        // return $nhanvien;
+        $sum = $nhanvien->count();
+        $luong = "";
+        if($sum > 0){
+        	Session::put('queryThongKeLuong', $nhanvien);
+        	$luong = $request->luongtu . " đến " .$request->luongden;
+        } else {
+        	 Session::forget('queryThongKeLuong');
+        }
+        $count = NhanVien::all()->count();
+        $tile = round($sum / $count * 100, 2);
+		return view('thongkenhanvien.luong', compact('nhanvien', 'sum', 'tile', 'luong'));
+	}
+
+	function getxemThongKeLuongPDF(){
+		$nhanvien = session('queryThongKeLuong');;
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->loadHTML($this->data_to_html_thongKeLuong($nhanvien));
+		return $pdf->stream();
+	}
+
+	function data_to_html_thongKeLuong($nhanvien){
+		$output = '<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>Danh sách thống kê nhân viên</title>
+				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+				<style>
+				*{ 
+					font-family: DejaVu Sans !important; 
+					font-size: 12px;
+				}
+			</style>
+			</head>
+			<body>
+				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN</h1></center>
 				<table class="table table-bordered table-hover">
 					<thead>
 						<tr>

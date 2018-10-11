@@ -30,8 +30,8 @@
                 <a class="btn btn-info" href="chitietnhapxemay/{{ $id_nhapxemay }}/them">
                   <i class="fa fa-plus-square"></i> Thêm
                 </a>
-                <a class="btn btn-primary" href="chitietnhapxemay/{{ $id_nhapxemay }}/view">
-                  <i class="fa fa-times"></i> Xem phiếu nhập
+                <a class="btn btn-warning" href="nhapxemay/in/{{ $id_nhapxemay }}" target="blank">
+                  <i class="fa fa-print"></i> Xem phiếu nhập
                 </a>
              </div>
             </div>

@@ -92,7 +92,7 @@
             <li><a href="nhapxemay"><i class="fa fa-motorcycle"></i>Phiếu nhập xe máy</a></li>
             <li><a href="nhapphutungphukien"><i class="fa fa-gears"></i>Phiếu nhập phụ tùng - phụ kiện</a></li>
             <li><a href="hoadonbanxemay"><i class="fa fa-motorcycle"></i>Hóa đơn bán xe máy</a></li>
-            <li><a href="#"><i class="fa fa-gears"></i>Hóa đơn bán phụ tùng - phụ kiện</a></li>
+            <li><a href="hoadonbanphutungphukien"><i class="fa fa-gears"></i>Hóa đơn bán phụ tùng - phụ kiện</a></li>
           </ul>
         </li>
         <!-- /Cập nhật thông tin-->
@@ -129,8 +129,8 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="thongke/nhanvien"><i class="fa fa-user"></i>Nhân viên</a></li>
-            <li><a href=""><i class="fa fa-motorcycle"></i>Xe máy</a></li>
-            <li><a href="#"><i class="fa fa-gears"></i>Phụ tùng phụ kiện</a></li>
+            <li><a href="thongke/xemay"><i class="fa fa-motorcycle"></i>Xe máy</a></li>
+            <li><a href="thongke/phutungphukien"><i class="fa fa-gears"></i>Phụ tùng phụ kiện</a></li>
             <li class="treeview">
               <a href="#"><i class="fa fa-book"></i>Phiếu nhập
                 <span class="pull-right-container">
@@ -139,7 +139,7 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href=""><i class="fa fa-circle-o"></i>Phụ tùng - phụ kiện</a></li>
-                <li><a href=""><i class="fa fa-circle-o"></i> Xe máy</a></li>
+                <li><a href="thongke/nhapxemay"><i class="fa fa-circle-o"></i> Xe máy</a></li>
               </ul>
             </li>
             <li class="treeview">
@@ -150,7 +150,7 @@
               </a>
               <ul class="treeview-menu">
                 <li><a href=""><i class="fa fa-circle-o"></i>Phụ tùng - phụ kiện</a></li>
-                <li><a href=""><i class="fa fa-circle-o"></i> Xe máy</a></li>
+                <li><a href="thongke/hoadonbanxemay"><i class="fa fa-circle-o"></i> Xe máy</a></li>
               </ul>
             </li>
 

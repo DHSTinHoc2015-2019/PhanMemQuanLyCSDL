@@ -90,7 +90,6 @@
           @endforeach
         </tbody>
         <tfoot>
-          <tr>
            <tr>
               <th>ID</th>
               <th>Tên xe</th>

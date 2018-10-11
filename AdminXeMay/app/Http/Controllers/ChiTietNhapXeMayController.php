@@ -25,6 +25,9 @@ class ChiTietNhapXeMayController extends Controller
         $chitietnhapxe->id_xemay = $request->id_xemay;
         $chitietnhapxe->dongianhap = $request->dongianhap;
         $chitietnhapxe->soluong = $request->soluong;
+        $xemay = XeMay::findOrFail($request->id_xemay);
+        $xemay->soluong = $xemay->soluong + $request->soluong;
+        $xemay->save();
         $chitietnhapxe->save();
         return redirect('chitietnhapxemay/'.$id_nhapxemay)->with('thongbaothem', "Thêm dữ liệu thành công!");
 	}
@@ -49,6 +52,9 @@ class ChiTietNhapXeMayController extends Controller
 	function getXoa($id, $id_chitiet){
         $chitietnhapxe = ChiTietNhapXeMay::findOrFail($id_chitiet);
         $chitietnhapxe->delete();
+        $xemay = XeMay::findOrFail($chitietnhapxe->id_xemay);
+        $xemay->soluong = $xemay->soluong - $chitietnhapxe->soluong;
+        $xemay->save();
         return redirect('chitietnhapxemay/'.$id)->with('thongbaoxoa', "Xóa dữ liệu thành công!");
     }
 

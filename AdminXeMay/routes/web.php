@@ -29,6 +29,9 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('nhanvien/viewPDF', 'NhanVienController@getViewPDF');
     Route::get('nhanvien/viewSearchPDF', 'NhanVienController@getViewSearchPDF');
     Route::get('nhanvien/xemThongKeChucVuPDF', 'NhanVienController@getxemThongKeChucVuPDF');
+    Route::get('nhanvien/xemThongKeGioiTinhPDF', 'NhanVienController@getxemThongKeGioiTinhPDF');
+    Route::get('nhanvien/xemThongKeTuoiPDF', 'NhanVienController@getxemThongKeTuoiPDF');
+    Route::get('nhanvien/xemThongKeLuongPDF', 'NhanVienController@getxemThongKeLuongPDF');
 
     Route::get('chucvu', 'ChucVuController@index');
     Route::get('chucvu/sua/{id}', 'ChucVuController@getSua');
@@ -43,6 +46,7 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('nhapxemay/them', 'NhapXeMayController@getThem');
     Route::post('nhapxemay/them', 'NhapXeMayController@postThem');
     Route::get('nhapxemay/xoa/{id}', 'NhapXeMayController@getXoa');
+    Route::get('nhapxemay/in/{id}', 'NhapXeMayController@getInPhieuNhap');
 
     Route::get('chitietnhapxemay/{idnhapxemay}', 'ChiTietNhapXeMayController@index');
     Route::get('chitietnhapxemay/{idnhapxemay}/sua/{idchitiet}', 'ChiTietNhapXeMayController@getSua');
@@ -77,15 +81,8 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('xemay/xoa/{id}', 'XeMayController@getXoa');
     Route::get('xemay/viewPDF', 'XeMayController@getViewPDF');
     Route::get('xemay/in/{id}', 'XeMayController@getIn');
-
-    Route::get('hoadonbanxemay', 'HoaDonBanXeMayController@index');
-    Route::get('hoadonbanxemay/sua/{id}', 'HoaDonBanXeMayController@getSua');
-    Route::post('hoadonbanxemay/sua/{id}', 'HoaDonBanXeMayController@postSua');
-    Route::get('hoadonbanxemay/them', 'HoaDonBanXeMayController@getThem');
-    Route::post('hoadonbanxemay/them', 'HoaDonBanXeMayController@postThem');
-    Route::get('hoadonbanxemay/xoa/{id}', 'HoaDonBanXeMayController@getXoa');
-    Route::get('hoadonbanxemay/viewPDF', 'HoaDonBanXeMayController@getViewPDF');
-    // Route::get('hoadonbanxemay/in/{id}', 'HoaDonBanXeMayController@getIn');
+    Route::get('xemay/viewSearchPDF', 'XeMayController@getViewSearchPDF'); 
+    Route::get('xemay/xemThongKeTenXePDF', 'XeMayController@getThongKeTenXePDF'); 
     
     Route::get('loaiphutung', 'LoaiPhuTungController@index');
     Route::get('loaiphutung/sua/{id}', 'LoaiPhuTungController@getSua');
@@ -115,48 +112,70 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('nhapphutungphukien/{id_nhapphutungphukien}/suachitietphutung/{id}', 'ChiTietNhapPhuTungController@getSua');
     Route::post('nhapphutungphukien/{id_nhapphutungphukien}/suachitietphutung/{id}', 'ChiTietNhapPhuTungController@postSua');
     Route::get('nhapphutungphukien/{id_nhapphutungphukien}/xoachitietphutung/{id}', 'ChiTietNhapPhuTungController@getXoa');
-    // Route::get('nhapphutungphukien/viewPDF', 'NhapPhuTungPhuKienController@getViewPDF');
+    Route::get('nhapphutungphukien/viewPDF', 'NhapPhuTungPhuKienController@getViewPDF');
+    // 
+    Route::get('nhapphutungphukien/{id_nhapphutungphukien}/themchitietphukien', 'ChiTietNhapPhuKienController@getThem');
+    Route::post('nhapphutungphukien/{id_nhapphutungphukien}/themchitietphukien', 'ChiTietNhapPhuKienController@postThem');
+    Route::get('nhapphutungphukien/{id_nhapphutungphukien}/suachitietphukien/{id}', 'ChiTietNhapPhuKienController@getSua');
+    Route::post('nhapphutungphukien/{id_nhapphutungphukien}/suachitietphukien/{id}', 'ChiTietNhapPhuKienController@postSua');
+    Route::get('nhapphutungphukien/{id_nhapphutungphukien}/xoachitietphukien/{id}', 'ChiTietNhapPhuKienController@getXoa');
+     
+    Route::get('phukien', 'PhuKienController@index');
+    Route::get('phukien/sua/{id}', 'PhuKienController@getSua');
+    Route::post('phukien/sua/{id}', 'PhuKienController@postSua');
+    Route::get('phukien/them', 'PhuKienController@getThem');
+    Route::post('phukien/them', 'PhuKienController@postThem');
+    Route::get('phukien/xoa/{id}', 'PhuKienController@getXoa');
+    Route::get('phukien/in/{id}', 'PhuKienController@getIn');
+    Route::get('phukien/viewPDF', 'PhuKienController@getViewPDF');
 
-    Route::get('baohanh', 'BaoHanhController@index');
-    Route::get('baohanh/sua/{id}', 'BaoHanhController@getSua');
-    Route::get('baohanh/them', 'BaoHanhController@getThem');
+    Route::get('hoadonbanxemay', 'HoaDonBanXeMayController@index');
+    Route::get('hoadonbanxemay/sua/{id}', 'HoaDonBanXeMayController@getSua');
+    Route::post('hoadonbanxemay/sua/{id}', 'HoaDonBanXeMayController@postSua');
+    Route::get('hoadonbanxemay/them', 'HoaDonBanXeMayController@getThem');
+    Route::post('hoadonbanxemay/them', 'HoaDonBanXeMayController@postThem');
+    Route::get('hoadonbanxemay/xoa/{id}', 'HoaDonBanXeMayController@getXoa');
+    Route::get('hoadonbanxemay/viewPDF', 'HoaDonBanXeMayController@getViewPDF');
+    // Route::get('hoadonbanxemay/in/{id}', 'HoaDonBanXeMayController@getIn'); 
+    
+    Route::get('hoadonbanphutungphukien', 'HoaDonBanPhuTungPhuKienController@index');
+    Route::get('hoadonbanphutungphukien/sua/{id}', 'HoaDonBanPhuTungPhuKienController@getSua');
+    Route::post('hoadonbanphutungphukien/sua/{id}', 'HoaDonBanPhuTungPhuKienController@postSua');
+    Route::get('hoadonbanphutungphukien/them', 'HoaDonBanPhuTungPhuKienController@getThem');
+    Route::post('hoadonbanphutungphukien/them', 'HoaDonBanPhuTungPhuKienController@postThem');
+    Route::get('hoadonbanphutungphukien/xoa/{id}', 'HoaDonBanPhuTungPhuKienController@getXoa');
+    Route::get('hoadonbanphutungphukien/viewPDF', 'HoaDonBanPhuTungPhuKienController@getViewPDF');
+    // Route::get('hoadonbanphutungphukien/in/{id}', 'HoaDonBanPhuTungPhuKienController@getIn');
+    Route::get('hoadonbanphutungphukien/{id_banphutungphukien}/danhsachchitiet', 'HoaDonBanPhuTungPhuKienController@danhsachchitiet');
+    Route::get('hoadonbanphutungphukien/{id_banphutungphukien}/themchitietphutung', 'ChiTietHoaDonBanPhuTungController@getThem');
+    Route::post('hoadonbanphutungphukien/{id_banphutungphukien}/themchitietphutung', 'ChiTietHoaDonBanPhuTungController@postThem');
+    Route::get('hoadonbanphutungphukien/{id_banphutungphukien}/suachitietphutung/{id}', 'ChiTietHoaDonBanPhuTungController@getSua');
+    Route::post('hoadonbanphutungphukien/{id_banphutungphukien}/suachitietphutung/{id}', 'ChiTietHoaDonBanPhuTungController@postSua');
+    Route::get('hoadonbanphutungphukien/{id_banphutungphukien}/xoachitietphutung/{id}', 'ChiTietHoaDonBanPhuTungController@getXoa');
+    // Route::get('hoadonbanphutungphukien/viewPDF', 'NhapPhuTungPhuKienController@getViewPDF');
+    // 
+    Route::get('hoadonbanphutungphukien/{id_banphutungphukien}/themchitietphukien', 'ChiTietHoaDonBanPhuKienController@getThem');
+    Route::post('hoadonbanphutungphukien/{id_banphutungphukien}/themchitietphukien', 'ChiTietHoaDonBanPhuKienController@postThem');
+    Route::get('hoadonbanphutungphukien/{id_banphutungphukien}/suachitietphukien/{id}', 'ChiTietHoaDonBanPhuKienController@getSua');
+    Route::post('hoadonbanphutungphukien/{id_banphutungphukien}/suachitietphukien/{id}', 'ChiTietHoaDonBanPhuKienController@postSua');
+    Route::get('hoadonbanphutungphukien/{id_banphutungphukien}/xoachitietphukien/{id}', 'ChiTietHoaDonBanPhuKienController@getXoa');
+    
+    // Route::get('baohanh', 'BaoHanhController@index');
+    // Route::get('baohanh/sua/{id}', 'BaoHanhController@getSua');
+    // Route::get('baohanh/them', 'BaoHanhController@getThem');
 
-    Route::get('chitietbaohanh/{idbaohanh}', 'ChiTietBaoHanhController@index');
-    Route::get('chitietbaohanh/sua/{id}', 'ChiTietBaoHanhController@getSua');
-    Route::get('chitietbaohanh/them', 'ChiTietBaoHanhController@getThem');
+    // Route::get('chitietbaohanh/{idbaohanh}', 'ChiTietBaoHanhController@index');
+    // Route::get('chitietbaohanh/sua/{id}', 'ChiTietBaoHanhController@getSua');
+    // Route::get('chitietbaohanh/them', 'ChiTietBaoHanhController@getThem');
 
-    Route::get('thongtinphutung/{idloaiphutung}', 'ThongTinPhuTungController@index');
-    Route::get('thongtinphutung/{idloaiphutung}/sua/{id}', 'ThongTinPhuTungController@getSua');
-    Route::post('thongtinphutung/{idloaiphutung}/sua/{id}', 'ThongTinPhuTungController@postSua');
-    Route::get('thongtinphutung/{idloaiphutung}/them', 'ThongTinPhuTungController@getThem');
-    Route::post('thongtinphutung/{idloaiphutung}/them', 'ThongTinPhuTungController@postThem');
-    Route::get('thongtinphutung/{idloaiphutung}/xoa/{id}', 'ThongTinPhuTungController@getXoa');
-
-    // Route::get('chitietnhapphutungphukien/{id_nhapphutungphukien}', 'ChiTietNhapPhuTungPhuKienController@index');
-    // Route::get('chitietnhapphutungphukien/sua/{id}', 'ChiTietNhapPhuTungController@getSua');
-    // Route::get('chitietnhapphutungphukien/{id_nhapphutungphukien}/themchitietphutung', 'ChiTietNhapPhuTungController@getThem');
-    // Route::post('chitietnhapphutungphukien/{id_nhapphutungphukien}/themchitietphutung', 'ChiTietNhapPhuTungController@postThem');
-    // Route::get('chitietnhapphutungphukien/{id_nhapphutungphukien}/suachitietphutung/{id}', 'ChiTietNhapPhuTungController@getSua');
-    // Route::post('chitietnhapphutungphukien/{id_nhapphutungphukien}/suachitietphutung/{id}', 'ChiTietNhapPhuTungController@postSua');
-    // Route::get('chitietnhapphutungphukien/{id_nhapphutungphukien}/xoachitietphutung/{id}', 'ChiTietNhapPhuTungController@getXoa');
-    // Route::get('chitietnhapphutungphukien/{id_nhapphutungphukien}/themchitietphukien', 'ChiTietNhapPhuKienController@getThem');
-    // Route::post('chitietnhapphutungphukien/{id_nhapphutungphukien}/themchitietphukien', 'ChiTietNhapPhuKienController@postThem');
-    // Route::get('chitietnhapphutungphukien/{id_nhapphutungphukien}/suachitietphukien/{id}', 'ChiTietNhapPhuKienController@getSua');
-    // Route::post('chitietnhapphutungphukien/{id_nhapphutungphukien}/suachitietphukien/{id}', 'ChiTietNhapPhuKienController@postSua');
-    // Route::get('chitietnhapphutungphukien/{id_nhapphutungphukien}/xoachitietphukien/{id}', 'ChiTietNhapPhuKienController@getXoa');
-
-
-    Route::get('thongtinphukien', 'ThongTinPhuKienController@index');
-    Route::get('thongtinphukien/sua/{id}', 'ThongTinPhuKienController@getSua');
-    Route::post('thongtinphukien/sua/{id}', 'ThongTinPhuKienController@postSua');
-    Route::get('thongtinphukien/them', 'ThongTinPhuKienController@getThem');
-    Route::post('thongtinphukien/them', 'ThongTinPhuKienController@postThem');
-    Route::get('thongtinphukien/xoa/{id}', 'ThongTinPhuKienController@getXoa');
 
     Route::get('ajax/getImgXeMay/{id}', 'AjaxController@getImgXeMay');
     Route::get('ajax/getImgHoaDonXeMay/{id}', 'AjaxController@getImgHoaDonXeMay');
     Route::get('ajax/getImgPhuTung/{id}', 'AjaxController@getImgPhuTung');
     Route::get('ajax/getImgPhuTungBangPhuTung/{id}', 'AjaxController@getImgPhuTungBangPhuTung');
+    Route::get('ajax/getImgPhuTungBangPhuTungHoaDon/{id}', 'AjaxController@getImgPhuTungBangPhuTungHoaDon');
+    Route::get('ajax/getImgPhuKienBangPhuKien/{id}', 'AjaxController@getImgPhuKienBangPhuKien');
+    Route::get('ajax/getImgPhuKienBangPhuKienHoaDon/{id}', 'AjaxController@getImgPhuKienBangPhuKienHoaDon');
 
 
     // Route::get('ajax/getImgXeMayTableXeMay/{idChiTietNhapXe}', 'AjaxController@getImgXeMayTableXeMay');
@@ -183,8 +202,44 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
         Route::group(['prefix' => 'nhanvien'], function(){
             Route::get('chucvu', 'NhanVienController@getThongKeChucVu');
             Route::post('chucvu', 'NhanVienController@postThongKeChucVu');
+
+            Route::get('gioitinh', 'NhanVienController@getThongKeGioiTinh');
+            Route::post('gioitinh', 'NhanVienController@postThongKeGioiTinh');
+
+            Route::get('tuoi', 'NhanVienController@getThongKeTuoi');
+            Route::post('tuoi', 'NhanVienController@postThongKeTuoi');
+
+            Route::get('luong', 'NhanVienController@getThongKeLuong');
+            Route::post('luong', 'NhanVienController@postThongKeLuong');
         });
-        // Route::post('nhanvien', 'NhanVienController@postTimKiem');
+
+        Route::get('xemay', 'XeMayController@getThongKeIndex');
+        Route::group(['prefix' => 'xemay'], function(){
+            Route::get('xetrongcuahang', 'XeMayController@getThongKeXeTrongCuaHang');
+
+            Route::get('tenxe', 'XeMayController@getThongKeTenXe');
+            Route::post('tenxe', 'XeMayController@postThongKeTenXe');
+        });
+
+        Route::get('phutungphukien', 'PhuTungPhuKienController@getThongKeIndex');
+        Route::group(['prefix' => 'phutungphukien'], function(){
+            // Route::get('phutungphukientrongcuahang', 'PhuTungPhuKienController@getThongKeXeTrongCuaHang');
+
+            // Route::get('tenxe', 'PhuTungPhuKienController@getThongKeTenXe');
+            // Route::post('tenxe', 'PhuTungPhuKienController@postThongKeTenXe');
+        });
+
+        Route::get('nhapxemay', 'NhapXeMayController@getThongKeIndex');
+        Route::group(['prefix' => 'nhapxemay'], function(){
+            // Route::get('tenxe', 'PhuTungPhuKienController@getThongKeTenXe');
+            // Route::post('tenxe', 'PhuTungPhuKienController@postThongKeTenXe');
+        });
+
+        Route::get('hoadonbanxemay', 'HoaDonBanXeMayController@getThongKeIndex');
+        Route::group(['prefix' => 'hoadonbanxemay'], function(){
+            // Route::get('tenxe', 'PhuTungPhuKienController@getThongKeTenXe');
+            // Route::post('tenxe', 'PhuTungPhuKienController@postThongKeTenXe');
+        });
     });
 });
 
@@ -220,6 +275,11 @@ Route::get('demoselect', function () {
 Route::get('demo1', function () {
     $nhanvien = App\NhanVien::DanhSach();
     return view('phieunhapxe', compact('nhanvien'));
+});
+
+Route::get('hoadon', function () {
+    
+    return view('hoadon');
 });
 
 Route::get('demosession/tao', function () {

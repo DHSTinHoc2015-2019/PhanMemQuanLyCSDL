@@ -21,9 +21,17 @@ class NhapXeMay extends Model
     }
 
     public function scopeDanhSach($query){
+        return $query->join('nhan_viens', 'id_nhanvien', '=', 'nhan_viens.id')
+        ->join('nha_cung_caps', 'id_nhacungcap', '=', 'nha_cung_caps.id')
+        ->select('nhap_xe_mays.id', 'tennhacungcap', 'hoten', 'nhap_xe_mays.created_at')
+        ->get();
+    }
+
+    public function scopeDanhSachTheoID($query, $id){
     	return $query->join('nhan_viens', 'id_nhanvien', '=', 'nhan_viens.id')
     	->join('nha_cung_caps', 'id_nhacungcap', '=', 'nha_cung_caps.id')
-    	->select('nhap_xe_mays.id', 'tennhacungcap', 'hoten', 'nhap_xe_mays.created_at')
-    	->get();
+    	->select('nhap_xe_mays.id', 'tennhacungcap', 'nha_cung_caps.diachi', 'nha_cung_caps.sodienthoai', 'nha_cung_caps.email', 'hoten', 'nhap_xe_mays.created_at')
+        ->where('nhap_xe_mays.id', $id)
+    	->first();
     }
 }

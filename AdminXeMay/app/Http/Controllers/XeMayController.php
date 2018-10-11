@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\XeMay;
 use App\LoaiBaoHanh;
 use DB;
+use Session;
 
 class XeMayController extends Controller
 {
@@ -232,40 +233,208 @@ class XeMayController extends Controller
         return $output;
     }
 
-    // function getTimKiem(){
-    //     $xemay = XeMay::danhSachXeMay();
-    //     return view('timkiem.xemay', compact('xemay'));
-    // }
+    function getTimKiem(){
+        $xemay = XeMay::danhSachXeMay();
+        return view('timkiem.xemay', compact('xemay'));
+    }
 
-    //  function postTimKiem(Request $request){
-    //     $query = "SELECT DISTINCT xe_mays.id, thong_tin_chung_xes.tenxe, thong_tin_chung_xes.mauxe, thong_tin_chung_xes.dungtichxylanh, loai_bao_hanhs.tenloaibaohanh, sokhung, somay, dongiaban, namsanxuat, thong_tin_chung_xes.img 
-    //         FROM xe_mays, chi_tiet_nhap_xes, thong_tin_chung_xes, loai_bao_hanhs 
-    //         WHERE (xe_mays.id_chitietnhapxe = chi_tiet_nhap_xes.id) 
-    //         AND (chi_tiet_nhap_xes.id_thongtinchungxe = thong_tin_chung_xes.id) 
-    //         AND (xe_mays.id_loaibaohanh = loai_bao_hanhs.id)";
-    //     $where = "";
-    //     if($request->tenxe != null){
-    //         $where .= "((tenxe like '%" . $request->tenxe . "%')";
-    //     }
-    //     if($request->mauxe != null){
-    //         if($where == ''){
-    //             $where .= "((thong_tin_chung_xes.mauxe like '%" . $request->mauxe . "%')";
-    //         } else{
-    //             $where .= ' ' . $request->radio1 . ' ' . "(thong_tin_chung_xes.mauxe like '%" . $request->mauxe . "%')";
-    //         }
-    //     }
-    //     if($request->dongiaban != null && $request->dongiabanden != null){
-    //         if($where == ''){
-    //             $where .= "((dongiaban BETWEEN " . $request->dongiaban . " AND " . $request->dongiabanden . ")";
-    //         } else{
-    //             $where .= ' ' . $request->radio2 . ' ' . "(dongiaban BETWEEN " . $request->dongiaban . " AND " . $request->dongiabanden . ")";
-    //         }
-    //     }
-    //     if($where != ""){
-    //         $query .= " AND " . $where . ")";
-    //     }
-    //     $xemay = DB::select(DB::raw($query));
+     function postTimKiem(Request $request){
+        $toantu = "";
+        if($request->has("AND")) $toantu .= " AND ";
+        else $toantu .= " OR ";
+
+        $query = "SELECT DISTINCT xe_mays.id, tenxe, mauxe, dongia, soluong, namsanxuat, noisanxuat, dungtichxylanh, donvitinh, loai_bao_hanhs.tenloaibaohanh, img
+            FROM xe_mays, loai_bao_hanhs 
+            WHERE (xe_mays.id_loaibaohanh = loai_bao_hanhs.id)";
+
+        $where = "";
+        if($request->tenxe != null){
+            $where .= "((tenxe like '%" . $request->tenxe . "%')";
+        }
+        if($request->mauxe != null){
+            if($where == ''){
+                $where .= "((mauxe like '%" . $request->mauxe . "%')";
+            } else{
+                $where .= ' ' . $toantu . ' ' . "(mauxe like '%" . $request->mauxe . "%')";
+            }
+        }
+        if($request->dongiaban != null && $request->dongiabanden != null){
+            if($where == ''){
+                $where .= "((dongia BETWEEN " . $request->dongiaban . " AND " . $request->dongiabanden . ")";
+            } else{
+                $where .= ' ' . $toantu . ' ' . "(dongia BETWEEN " . $request->dongiaban . " AND " . $request->dongiabanden . ")";
+            }
+        }
+
+        if($where != ""){
+           $query .= " AND " . $where . ")";
+            Session::put('querySearchXeMay', $query);
+        } else {
+            Session::forget('querySearchXeMay');
+        }
+        $xemay = DB::select(DB::raw($query));
         
-    //     return view('timkiem.xemay', compact('xemay'));
-    // }
+        return view('timkiem.xemay', compact('xemay'));
+    }
+
+     function getViewSearchPDF(){
+        if(!empty(session('querySearchXeMay'))) $xemay = DB::select(DB::raw(session('querySearchXeMay')));
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($this->data_to_html_search($xemay));
+        return $pdf->stream();
+    }
+
+    function data_to_html_search($xemay){
+       $output = '<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <title>Danh sách tìm kiếm xe máy</title>
+                 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+                <style>
+                *{ 
+                    font-family: DejaVu Sans !important; 
+                    font-size: 12px;
+                }
+            </style>
+            </head>
+            <body>
+                <center><h1 style="color: red; font-weight: bold;">DANH SÁCH TÌM KIẾM XE MÁY</h1></center>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                             <th>ID</th>
+                            <th>Tên xe</th>
+                            <th>Màu xe</th>
+                            <th>Đơn giá bán</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th>Dung tích</th>
+                            <th>Loại bảo hành</th>
+                            <th>Năm sản xuất</th>
+                            <th>Hình ảnh</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+                    foreach ($xemay as $xemay) {
+                        $output .= '<tr>
+                             <td>'. $xemay->id.'</td>
+                            <td>'. $xemay->tenxe.'</td>
+                            <td>'. $xemay->mauxe.'</td>
+                            <td>'. number_format($xemay->dongia, 0, '', '.').' đ</td>
+                            <td>'. $xemay->soluong.'</td>
+                            <td>'. number_format($xemay->dongia * $xemay->soluong, 0, '', '.').' đ</td>
+                            <td>'. $xemay->dungtichxylanh.'</td>
+                            <td>'. $xemay->tenloaibaohanh.'</td>
+                            <td>'. $xemay->namsanxuat.'</td>
+                            <td><img src="uploads/xemay/'.$xemay->img.'" width="100" height="60"></td>
+                        </tr>';
+                    }
+
+                    $output .= '
+                    </tbody>
+                </table>
+            </body>
+            </html>';
+        return $output;
+    }
+
+    function getThongKeIndex(){
+        return view('thongkexemay.xemay');
+    }
+
+    function getThongKeXeTrongCuaHang(){
+        $xemay = XeMay::danhSachXeMayTrongCuaHang();
+        $sumsoluong = $xemay->sum('soluong');
+        return view('thongkexemay.xetrongcuahang', compact('xemay', 'sumsoluong'));
+    }
+
+    function getThongKeTenXe(){
+        $xemay = XeMay::danhSachXeMayTrongCuaHang();
+        $tenxe = XeMay::select('tenxe')->distinct()->get();
+        return view('thongkexemay.tenxe', compact('xemay', 'tenxe'));
+    }
+
+    function postThongKeTenXe(Request $request){
+        $xemay = XeMay::join('loai_bao_hanhs', 'id_loaibaohanh', 'loai_bao_hanhs.id')
+        ->select('xe_mays.id', 'tenxe', 'mauxe', 'dongia', 'soluong', 'namsanxuat', 'noisanxuat', 'dungtichxylanh', 'donvitinh', 'loai_bao_hanhs.tenloaibaohanh', 'img')
+        ->where('tenxe', $request->tenxe)
+        ->get();
+        $sum = $xemay->sum('soluong');
+        $tenxemay = "";
+        if($sum > 0){
+            Session::put('queryThongKeTenXe', $xemay);
+            $tenxemay = $xemay[0]->tenxe;
+        } else {
+             Session::forget('queryThongKeTenXe');
+        }
+        $count = XeMay::all()->sum('soluong');
+        $tile = round($sum / $count * 100, 2);
+        $tenxe = XeMay::select('tenxe')->distinct()->get();
+        return view('thongkexemay.tenxe', compact('xemay','tenxe', 'sum', 'tile', 'tenxemay'));
+    }
+
+    function getThongKeTenXePDF(){
+        $xemay = session('queryThongKeTenXe');;
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($this->data_to_html_ThongKeTenXe($xemay));
+        return $pdf->stream();
+    }
+
+    function data_to_html_ThongKeTenXe($xemay){
+       $output = '<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <title>Thống kê xe máy</title>
+                 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+                <style>
+                *{ 
+                    font-family: DejaVu Sans !important; 
+                    font-size: 12px;
+                }
+            </style>
+            </head>
+            <body>
+                <center><h1 style="color: red; font-weight: bold;">DANH SÁCH XE MÁY</h1></center>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                             <th>ID</th>
+                            <th>Tên xe</th>
+                            <th>Màu xe</th>
+                            <th>Đơn giá bán</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th>Dung tích</th>
+                            <th>Loại bảo hành</th>
+                            <th>Năm sản xuất</th>
+                            <th>Hình ảnh</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+                    foreach ($xemay as $xemay) {
+                        $output .= '<tr>
+                             <td>'. $xemay->id.'</td>
+                            <td>'. $xemay->tenxe.'</td>
+                            <td>'. $xemay->mauxe.'</td>
+                            <td>'. number_format($xemay->dongia, 0, '', '.').' đ</td>
+                            <td>'. $xemay->soluong.'</td>
+                            <td>'. number_format($xemay->dongia * $xemay->soluong, 0, '', '.').' đ</td>
+                            <td>'. $xemay->dungtichxylanh.'</td>
+                            <td>'. $xemay->tenloaibaohanh.'</td>
+                            <td>'. $xemay->namsanxuat.'</td>
+                            <td><img src="uploads/xemay/'.$xemay->img.'" width="100" height="60"></td>
+                        </tr>';
+                    }
+
+                    $output .= '
+                    </tbody>
+                </table>
+            </body>
+            </html>';
+        return $output;
+    }
 }

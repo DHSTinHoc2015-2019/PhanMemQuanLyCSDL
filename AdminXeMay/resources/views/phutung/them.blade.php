@@ -74,7 +74,7 @@
     <!-- /.box-body -->
     <div class="box-footer">
       <button type="submit" class="btn btn-primary">Lưu lại</button>
-      <a href="hoadonbanxemay/"><button type="button" class="btn btn-danger">Hủy bỏ</button></a>
+      <a href="phutung"><button type="button" class="btn btn-danger">Hủy bỏ</button></a>
     </div>
   </form>
   <!-- /Form -->

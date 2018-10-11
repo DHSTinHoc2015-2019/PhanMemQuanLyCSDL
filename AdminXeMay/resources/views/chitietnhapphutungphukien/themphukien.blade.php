@@ -11,7 +11,7 @@
   <section class="content-header">
     <h1>
       Chi tiết nhập phụ kiện
-      <small></small>
+      <small>Thêm</small>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Admin</a></li>
@@ -22,7 +22,7 @@
   <!-- Main content -->
   <section class="content">
     <!-- Form -->
-    <form action="chitietnhapphutungphukien/{{ $id_nhapphutungphukien }}/themchitietphukien" method="post" enctype="application/x-www-form-urlencoded">
+    <form action="nhapphutungphukien/{{ $id_nhapphutungphukien }}/themchitietphukien" method="post" enctype="application/x-www-form-urlencoded">
       @csrf
     <div class="box box-default">
       <div class="box-header with-border">
@@ -40,27 +40,27 @@
               <!-- select -->
               <div class="form-group">
                 <label>Chọn phụ kiện</label>
-                <select class="form-control" name="id_thongtinphukien" onchange="chonPhuKien(this.value);" required="">
+                <select class="form-control" name="id_phukien" onchange="chonPhuKien(this.value);" required="">
                   <option value="">Chọn</option>
-                  @foreach($thongtinphukien as $thongtinphukien)
-                  <option value="{{ $thongtinphukien->id }}">{{ $thongtinphukien->tenphukien }} - {{ $thongtinphukien->tenxe }}</option>
+                  @foreach($phukien as $phukien)
+                  <option value="{{ $phukien->id }}">{{ $phukien->tenphukien }} - {{ $phukien->tenxe }}</option>
                   @endforeach
                 </select>
                 <div class="form-group">
                   <label>Số lượng</label>
-                  <input type="number" class="form-control" placeholder="Nhập số lượng" name="soluong" required="">
+                  <input type="number" class="form-control" placeholder="Nhập số lượng" name="soluong">
                 </div>
                 <div class="form-group">
                   <label>Giá nhập</label>
-                  <input type="number" class="form-control" placeholder="Nhập giá" name="gianhap" required="">
+                  <input type="number" class="form-control" placeholder="Nhập giá" name="gianhap">
                 </div>
               </div>
             </div>
             <!-- /.col -->
             <div class="col-md-6" id="showImg">
               <div class="form-group">
-               <!--  <label>Hình ảnh phụ kiện</label>
-                <img src="uploads/phukien/LopXe.jpg" id="profile-img-tag" style="display: block; margin-left: auto; margin-right: auto;" width="300px">   -->                                      
+               <!--  <label>Hình ảnh phụ tùng</label>
+                <img src="uploads/phutung/LopXe.jpg" id="profile-img-tag" style="display: block; margin-left: auto; margin-right: auto;" width="300px">   -->                                      
               </div>
             </div>
             <!-- /.col -->
@@ -85,8 +85,9 @@
 
 @section('script')
 <script>
-   function chonPhuKien(idthongtinphukien){
-          if (idthongtinphukien == "") {
+   function chonPhuKien(id_phukien){
+    console.log(id_phukien);
+          if (id_phukien == "") {
           document.getElementById("showImg").innerHTML = "";
           return;
         }
@@ -101,7 +102,7 @@
                 document.getElementById("showImg").innerHTML = this.responseText;
             }
         }
-        xmlhttp.open("GET", "ajax/getImgPhuKienTableLoaiPhuKien/" + idthongtinphukien, true);
+        xmlhttp.open("GET", "ajax/getImgPhuKienBangPhuKien/" + id_phukien, true);
         xmlhttp.send();
   }
 </script>

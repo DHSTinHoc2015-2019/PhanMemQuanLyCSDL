@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\XeMay;
 use App\LoaiPhuTung;
 use App\PhuTung;
+use App\PhuKien;
 use DB;
 
 class AjaxController extends Controller
@@ -60,6 +61,50 @@ class AjaxController extends Controller
 		<label>Hình ảnh phụ tùng</label>
 		<img src="uploads/phutung/';
 		$str .= $phutung->imgphutung;
+		$str .= '" id="profile-img-tag" width="300px" style="display: block; margin-left: auto; margin-right: auto;" />                                        
+		</div>';
+		return $str;
+	}
+
+	function getImgPhuTungBangPhuTungHoaDon($id_phutung){
+		$phutung = PhuTung::PhuTungTheoID($id_phutung);
+		$str = "";
+		$str .= '<div class="form-group">
+                  <label>Giá bán</label>
+                  <input type="number" class="form-control" placeholder="Nhập giá" name="dongiaban" value="'.$phutung->dongia.'">
+                </div>';
+		$str .= '<div class="form-group">
+		<label>Hình ảnh phụ tùng</label>
+		<img src="uploads/phutung/';
+		$str .= $phutung->imgphutung;
+		$str .= '" id="profile-img-tag" width="300px" style="display: block; margin-left: auto; margin-right: auto;" />                                        
+		</div>';
+		return $str;
+	}
+
+	function getImgPhuKienBangPhuKien($id_phukien){
+		$phukien = PhuKien::PhuKienTheoID($id_phukien);
+		$str = "";
+		$str .= '<div class="form-group">
+		<label>Hình ảnh phụ kiện</label>
+		<img src="uploads/phukien/';
+		$str .= $phukien->imgphukien;
+		$str .= '" id="profile-img-tag" width="300px" style="display: block; margin-left: auto; margin-right: auto;" />                                        
+		</div>';
+		return $str;
+	}
+
+	function getImgPhuKienBangPhuKienHoaDon($id_phukien){
+		$phukien = PhuKien::PhuKienTheoID($id_phukien);
+		$str = "";
+		$str .= ' <div class="form-group">
+                  <label>Giá bán</label>
+                  <input type="number" class="form-control" placeholder="Nhập giá" name="dongiaban" value="'.$phukien->dongia.'">
+                </div>';
+		$str .= '<div class="form-group">
+		<label>Hình ảnh phụ kiện</label>
+		<img src="uploads/phukien/';
+		$str .= $phukien->imgphukien;
 		$str .= '" id="profile-img-tag" width="300px" style="display: block; margin-left: auto; margin-right: auto;" />                                        
 		</div>';
 		return $str;

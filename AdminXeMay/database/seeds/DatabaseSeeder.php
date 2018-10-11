@@ -637,7 +637,46 @@ class DatabaseSeeder extends Seeder
             'created_at' => date("Y-m-d"),
         ]);
         
+        //Seed for table chi_tiet_hoa_don_ban_phu_tungs
+        DB::table('chi_tiet_hoa_don_ban_phu_tungs')->insert([
+            'id_banphutungphukien' => 1,
+            'id_phutung' => 1,
+            'dongiaban' => 400000,
+            'soluongban' => 1,
+            'created_at' => date("Y-m-d"),
+        ]);
 
+        DB::table('chi_tiet_hoa_don_ban_phu_tungs')->insert([
+            'id_banphutungphukien' => 1,
+            'id_phutung' => 2,
+            'dongiaban' => 400000,
+            'soluongban' => 1,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('chi_tiet_hoa_don_ban_phu_tungs')->insert([
+            'id_banphutungphukien' => 1,
+            'id_phutung' => 3,
+            'dongiaban' => 400000,
+            'soluongban' => 1,
+            'created_at' => date("Y-m-d"),
+        ]);
+        
+        DB::table('chi_tiet_hoa_don_ban_phu_tungs')->insert([
+            'id_banphutungphukien' => 1,
+            'id_phutung' => 4,
+            'dongiaban' => 400000,
+            'soluongban' => 1,
+            'created_at' => date("Y-m-d"),
+        ]);
+
+        DB::table('chi_tiet_hoa_don_ban_phu_tungs')->insert([
+            'id_banphutungphukien' => 1,
+            'id_phutung' => 5,
+            'dongiaban' => 350000,
+            'soluongban' => 1,
+            'created_at' => date("Y-m-d"),
+        ]);
 
 
      //    //Seed for table bao_hanhs

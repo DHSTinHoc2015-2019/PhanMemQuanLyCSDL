@@ -44,6 +44,7 @@
                   <th>Xem chi tiết</th>
                   <th>Chỉnh sửa</th>
                   <th>Xóa</th>
+                  <th>In</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -64,8 +65,13 @@
                     </a>
                   </td>
                   <td>
-                    <button class="btn btn-danger" onclick="Delete({{ $nhapxe->id }});"><i class="fa fa-times"></i> Xóa</button>
+                    <button class="btn btn-danger" onclick="Delete({{ $nhapxe->id }});"><i class="fa fa-trash"></i> Xóa</button>
                   </td>
+                  <td>
+               <a class="btn btn-warning" href="nhapxemay/in/{{ $nhapxe->id }}" target="blank">
+                <i class="fa fa-print"> In</i>
+              </a>
+            </td>
                 </tr>
                 @endforeach
                 </tbody>
@@ -78,6 +84,7 @@
                   <th>Xem chi tiết</th>
                   <th>Chỉnh sửa</th>
                   <th>Xóa</th>
+                  <th>In</th>
                 </tr>
                 </tfoot>
               </table>

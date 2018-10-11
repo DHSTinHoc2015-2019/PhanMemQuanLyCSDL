@@ -62,6 +62,10 @@ class KhachHangController extends Controller
     }
 
      function postTimKiem(Request $request){
+        $toantu = "";
+        if($request->has("AND")) $toantu .= " AND ";
+        else $toantu .= " OR ";
+
         $query = "
         SELECT *
         FROM khach_hangs
@@ -76,7 +80,7 @@ class KhachHangController extends Controller
             if($where == ''){
                 $where .= "(gioitinh like '%" . $request->gioitinh . "%')";
             } else{
-                $where .= ' ' . $request->radio1 . ' ' . "(gioitinh like '%" . $request->gioitinh . "%')";
+                $where .= ' ' . $toantu . ' ' . "(gioitinh like '%" . $request->gioitinh . "%')";
             }
         }
 
@@ -84,7 +88,7 @@ class KhachHangController extends Controller
             if($where == ''){
                 $where .= "(diachi like '%" . $request->diachi . "%')";
             } else{
-                $where .= ' ' . $request->radio2 . ' ' . "(diachi like '%" . $request->diachi . "%')";
+                $where .= ' ' . $toantu . ' ' . "(diachi like '%" . $request->diachi . "%')";
             }
         }
 
@@ -92,10 +96,9 @@ class KhachHangController extends Controller
             if($where == ''){
                 $where .= "(YEAR(ngaysinh) BETWEEN " . $request->namsinhtu . " AND " . $request->namsinhden . ")";
             } else{
-                $where .= ' ' . $request->radio3 . ' ' . "(YEAR(ngaysinh) BETWEEN " . $request->namsinhtu . " AND " . $request->namsinhden . ")";
+                $where .= ' ' . $toantu . ' ' . "(YEAR(ngaysinh) BETWEEN " . $request->namsinhtu . " AND " . $request->namsinhden . ")";
             }
         }
-
 
         if($where != ""){
             $query .= " WHERE " . $where;

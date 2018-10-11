@@ -11,11 +11,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <b>Nhập phụ tùng - phụ kiện</b><small>Thêm</small>
+        <b>Nhập phụ tùng - phụ kiện</b><small>Chỉnh sửa</small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-dashboard"></i> Admin</a></li>
-        <li class="active">Sửa</li>
+        <li class="active">Chỉnh sửa</li>
       </ol>
     </section>
 

@@ -30,6 +30,9 @@ class HoaDonBanXeMayController extends Controller
         $hoadonbanxemay->soluong = $request->soluong;
         $hoadonbanxemay->thueVAT = $request->thueVAT;
         $hoadonbanxemay->save();
+        $xemay = XeMay::findOrFail($request->id_xemay);
+        $xemay->soluong = $xemay->soluong - $request->soluong;
+        $xemay->save();
         return redirect('hoadonbanxemay')->with('thongbaothem', "Thêm dữ liệu thành công!");
 	}
 
@@ -56,6 +59,9 @@ class HoaDonBanXeMayController extends Controller
 	function getXoa($id){
         $hoadonbanxemay = HoaDonBanXeMay::findOrFail($id);
         $hoadonbanxemay->delete();
+        $xemay = XeMay::findOrFail($hoadonbanxemay->id_xemay);
+        $xemay->soluong = $xemay->soluong + $hoadonbanxemay->soluong;
+        $xemay->save();
         return redirect('hoadonbanxemay/')->with('thongbaoxoa', "Xóa dữ liệu thành công!");
     }
 
@@ -121,6 +127,10 @@ class HoaDonBanXeMayController extends Controller
             </body>
             </html>';
         return $output;
+    }
+
+    function getThongKeIndex(){
+        return view('thongkehoadonbanxemay.hoadonbanxemay');
     }
 
 }
