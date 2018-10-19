@@ -39,7 +39,6 @@
                   <!-- /.box-header -->
                   <div class="box-body with-border">
                     <div class="row">
-                    <div class="col-md-1"></div>
                     <div class="col-md-2">
                       <div class="form-group">
                         <div style="font-size: 1.3em; font-weight: bold;">
@@ -85,16 +84,19 @@
                     </div>
                     <!-- /.col -->
 
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                        <button type="submit" class="btn btn-primary">THỐNG KÊ</button>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                       <div class="pull-right">
                          @if(!empty($sum))
                         <a class="btn btn-warning" href="nhanvien/xemThongKeLuongPDF" target="blank">
                           <i class="fa fa-print"></i> In danh sách
                         </a>
                         @endif
+                        <a class="btn btn-warning" href="nhanvien/xemThongKeToanBoLuongPDF" target="blank">
+                          <i class="fa fa-print"></i> In toàn bộ
+                        </a>
                       </div>
                     </div>
                     <!-- /.col -->
@@ -174,7 +176,7 @@
     </table>
     <div class="col-md-10">
         @if(!empty($sum))
-      <p style="font-size: 1.5em; color: red;">Tổng số lượng nhân viên có lương từ {{ $luong}}: {{ $sum }} <br> Chiếm tỉ lệ {{ $tile }} tổng số nhân viên</p>
+      <p style="font-size: 1.5em; color: red;">Tổng số lượng nhân viên: {{ $sum }} <br> Chiếm tỉ lệ {{ $tile }}% tổng số nhân viên</p>
       @endif
       </div>
   </div>

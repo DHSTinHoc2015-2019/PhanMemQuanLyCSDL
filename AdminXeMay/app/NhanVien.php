@@ -38,4 +38,18 @@ class NhanVien extends Model
         return $query->join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
         ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')->get();
     }
+
+    function scopeDanhSachTheoChucVu($query, $chucvu){
+        return $query->join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+        ->where('tenchucvu', $chucvu)
+        ->get();
+    }
+
+    function scopeDanhSachTheoGioiTinh($query, $gioitinh){
+        return $query->join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+        ->where('gioitinh', $gioitinh)
+        ->get();
+    }
 }

@@ -29,9 +29,13 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('nhanvien/viewPDF', 'NhanVienController@getViewPDF');
     Route::get('nhanvien/viewSearchPDF', 'NhanVienController@getViewSearchPDF');
     Route::get('nhanvien/xemThongKeChucVuPDF', 'NhanVienController@getxemThongKeChucVuPDF');
+    Route::get('nhanvien/xemThongKeToanBoChucVuPDF', 'NhanVienController@getxemThongKeToanBoChucVuPDF');
+    Route::get('nhanvien/xemThongKeToanBoGioiTinhPDF', 'NhanVienController@getxemThongKeToanBoGioiTinhPDF');
     Route::get('nhanvien/xemThongKeGioiTinhPDF', 'NhanVienController@getxemThongKeGioiTinhPDF');
     Route::get('nhanvien/xemThongKeTuoiPDF', 'NhanVienController@getxemThongKeTuoiPDF');
     Route::get('nhanvien/xemThongKeLuongPDF', 'NhanVienController@getxemThongKeLuongPDF');
+    Route::get('nhanvien/xemThongKeToanBoLuongPDF', 'NhanVienController@getxemThongKeToanBoLuongPDF');
+    Route::get('nhanvien/xemThongKeToanBoTuoiPDF', 'NhanVienController@getxemThongKeToanBoTuoiPDF');
 
     Route::get('chucvu', 'ChucVuController@index');
     Route::get('chucvu/sua/{id}', 'ChucVuController@getSua');
@@ -82,7 +86,8 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('xemay/viewPDF', 'XeMayController@getViewPDF');
     Route::get('xemay/in/{id}', 'XeMayController@getIn');
     Route::get('xemay/viewSearchPDF', 'XeMayController@getViewSearchPDF'); 
-    Route::get('xemay/xemThongKeTenXePDF', 'XeMayController@getThongKeTenXePDF'); 
+    Route::get('xemay/xemThongKeTenXePDF', 'XeMayController@getThongKeTenXePDF');
+    Route::get('xemay/xemDanhSachTheoTungLoaiXePDF', 'XeMayController@getxemDanhSachTheoTungLoaiXePDF');
     
     Route::get('loaiphutung', 'LoaiPhuTungController@index');
     Route::get('loaiphutung/sua/{id}', 'LoaiPhuTungController@getSua');
@@ -168,7 +173,7 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     // Route::get('chitietbaohanh/sua/{id}', 'ChiTietBaoHanhController@getSua');
     // Route::get('chitietbaohanh/them', 'ChiTietBaoHanhController@getThem');
 
-
+    //Ajax
     Route::get('ajax/getImgXeMay/{id}', 'AjaxController@getImgXeMay');
     Route::get('ajax/getImgHoaDonXeMay/{id}', 'AjaxController@getImgHoaDonXeMay');
     Route::get('ajax/getImgPhuTung/{id}', 'AjaxController@getImgPhuTung');
@@ -176,11 +181,6 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('ajax/getImgPhuTungBangPhuTungHoaDon/{id}', 'AjaxController@getImgPhuTungBangPhuTungHoaDon');
     Route::get('ajax/getImgPhuKienBangPhuKien/{id}', 'AjaxController@getImgPhuKienBangPhuKien');
     Route::get('ajax/getImgPhuKienBangPhuKienHoaDon/{id}', 'AjaxController@getImgPhuKienBangPhuKienHoaDon');
-
-
-    // Route::get('ajax/getImgXeMayTableXeMay/{idChiTietNhapXe}', 'AjaxController@getImgXeMayTableXeMay');
-    // Route::get('ajax/getImgPhuTungTableLoaiPhuTung/{idthongtinphutung}', 'AjaxController@getImgPhuTungTableLoaiPhuTung');
-    // Route::get('ajax/getImgPhuKienTableLoaiPhuKien/{idthongtinphukien}', 'AjaxController@getImgPhuKienTableLoaiPhuKien');
 
 
     //Tìm kiếm
@@ -292,4 +292,27 @@ Route::get('demosession/tao', function () {
         echo "co"; echo session('key1');
     }
     else echo "khong";
+});
+
+Route::get('api/{d}', function($d){
+  // Get the number of days to show data for, with a default of 7
+  // $days = Input::get('days', 7);
+  $days = $d;
+
+  
+  $range = Carbon\Carbon::now()->subDays($d);
+  $stats = DB::table('hoa_don_ban_xe_mays')
+    ->where('created_at', '>=', $range)
+    ->groupBy('date')
+    ->orderBy('date', 'ASC')
+    ->get([
+      DB::raw('Date(created_at) as date'),
+      DB::raw('COUNT(*) as value')
+    ])->toJSON();
+
+  return $stats;
+});
+
+Route::get('demoMorrisJS', function(){
+    return view('demoMorrisJS');
 });

@@ -20,8 +20,10 @@
 
   <!-- Main content -->
   <section class="content" style="font-size: 1.2em;">
-
-    <!-- Default box -->
+  <div class="row">
+    {{--
+    <div class="col-md-6">
+      <!-- Default box -->
     <div class="box">
       <div class="box-header with-border">
         <center><h1 class="box-title"><b></b></h1></center>
@@ -56,18 +58,169 @@
             Footer
           </div> -->
           <!-- /.box-footer-->
+      </div>
+      <!-- /.box -->
+    </div>
+--}}
+
+    <div class="col-md-12">
+       <!-- Default box -->
+    <div class="box">
+      <div class="box-header with-border">
+        <h1 class="box-title"><b>CHỨC VỤ</b></h1>
+          
+        <div class="box-tools pull-right">
+          <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+          title="Collapse">
+          <i class="fa fa-minus"></i></button>
+          <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+            <i class="fa fa-times"></i></button>
+          </div>
         </div>
-        <!-- /.box -->
-      </section>
-      <!-- /.content -->
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+                {!! $chartChucVu->container() !!}
+            </div>
+            {!! $chartChucVu->script() !!}
+          </div>
+          </div>
+        <!-- /.box-body -->
+          <div class="box-footer">
+            <a href="thongke/nhanvien/chucvu" class="btn btn-success">Chi tiết</a>
+            <div class="pull-right">
+              <a class="btn btn-warning" href="nhanvien/xemThongKeToanBoChucVuPDF" target="blank">
+                <i class="fa fa-print"></i> In toàn bộ
+              </a>
+            </div>
+          </div>
+          <!-- /.box-footer-->
+          </div>
+      <!-- /.box -->
+      </div>
+      <!-- /.col-md -->
+  
+      <div class="col-md-6">
+       <!-- Default box -->
+    <div class="box">
+      <div class="box-header with-border">
+        <h1 class="box-title"><b>GIỚI TÍNH</b></h1>
+          
+        <div class="box-tools pull-right">
+          <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+          title="Collapse">
+          <i class="fa fa-minus"></i></button>
+          <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+            <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+                {!! $chartGioiTinh->container() !!}
+            </div>
+            {!! $chartGioiTinh->script() !!}
+          </div>
+        </div>
+        <!-- /.box-body -->
+          <div class="box-footer">
+           <a href="thongke/nhanvien/gioitinh" class="btn btn-success">Chi tiết</a>
+           <div class="pull-right">
+              <a class="btn btn-warning" href="nhanvien/xemThongKeToanBoGioiTinhPDF" target="blank">
+                <i class="fa fa-print"></i> In toàn bộ
+              </a>
+            </div>
+          </div>
+          <!-- /.box-footer-->
+        </div>
+      <!-- /.box -->
+      </div>
+      <!-- /.col-md -->
 
+      <div class="col-md-6">
+       <!-- Default box -->
+        <div class="box">
+          <div class="box-header with-border">
+            <h1 class="box-title"><b>TUỔI</b></h1>
+              
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+              title="Collapse">
+              <i class="fa fa-minus"></i></button>
+              <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                <i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                    {!! $chartTuoi->container() !!}
+                </div>
+                {!! $chartTuoi->script() !!}
+              </div>
+              </div>
+            <!-- /.box-body -->
+              <div class="box-footer">
+                <a href="thongke/nhanvien/tuoi" class="btn btn-success">Chi tiết</a>
+                <div class="pull-right">
+                  <a class="btn btn-warning" href="nhanvien/xemThongKeToanBoTuoiPDF" target="blank">
+                    <i class="fa fa-print"></i> In toàn bộ
+                  </a>
+                </div>
+              </div>
+              <!-- /.box-footer-->
+              </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col-md -->
+        
+        <div class="col-md-2"></div>
 
+        <div class="col-md-8">
+       <!-- Default box -->
+        <div class="box">
+          <div class="box-header with-border">
+            <h1 class="box-title"><b>LƯƠNG</b></h1>
+              
+            <div class="box-tools pull-right">
+              <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+              title="Collapse">
+              <i class="fa fa-minus"></i></button>
+              <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+                <i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <div class="box-body">
+              <div class="row">
+                <div class="col-md-12">
+                    {!! $chartLuong->container() !!}
+                </div>
+                {!! $chartLuong->script() !!}
+              </div>
+              </div>
+            <!-- /.box-body -->
+              <div class="box-footer">
+                <a href="thongke/nhanvien/luong" class="btn btn-success">Chi tiết</a>
+                <div class="pull-right">
+                  <a class="btn btn-warning" href="nhanvien/xemThongKeToanBoLuongPDF" target="blank">
+                    <i class="fa fa-print"></i> In toàn bộ
+                  </a>
+                </div>
+              </div>
+              <!-- /.box-footer-->
+              </div>
+          <!-- /.box -->
+        </div>
+        <!-- /.col-md -->
+    </div>
+  </div>
+    
+  </section>
+  <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
     @endsection
-    @section('script')
- 
-  <script>
-  
-  </script>
+@section('script')
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js" charset="utf-8"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" charset="utf-8"></script>
 @endsection

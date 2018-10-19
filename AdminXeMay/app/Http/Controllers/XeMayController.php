@@ -7,6 +7,9 @@ use App\XeMay;
 use App\LoaiBaoHanh;
 use DB;
 use Session;
+use Carbon\Carbon;
+use Charts;
+use App\Charts\XeMay_Chart;
 
 class XeMayController extends Controller
 {
@@ -341,7 +344,52 @@ class XeMayController extends Controller
     }
 
     function getThongKeIndex(){
-        return view('thongkexemay.xemay');
+        /* Tên xe máy */
+        $countXeMay = XeMay::where('soluong', '>', 0)
+        ->get([
+          DB::raw('SUM(soluong) as tong')
+        ])
+        ->first()
+        ->tong;
+
+        $tenxe = DB::table('xe_mays')
+        ->select('tenxe',  DB::raw('SUM(soluong) as soluong'))
+        ->groupBy('tenxe')
+        ->where('soluong', '>', 0)
+        ->get();
+
+        $labelsTenXe = $tenxe->pluck('tenxe');
+        $valuesTenXe = $tenxe->pluck('soluong');
+        $chartTenXe = new XeMay_Chart();
+        $chartTenXe->labels($labelsTenXe);
+        $chartTenXe->loaderColor('rgb(255, 99, 132)');
+        
+        $chartTenXe->dataset('Số lượng', 'bar', $valuesTenXe)->color('blue')->backgroundColor('rgb(255, 129, 14)');
+
+        /* Màu xe */
+        $mauxe = DB::table('xe_mays')
+        ->select('mauxe',  DB::raw('SUM(soluong) as soluong'))
+        ->groupBy('mauxe')
+        ->get();
+
+        $labelsMauXe = $mauxe->pluck('mauxe');
+        $valuesMauXe = $mauxe->pluck('soluong');
+        $chartMauXe = new XeMay_Chart();
+        $chartMauXe->labels($labelsMauXe);
+        $chartMauXe->loaderColor('rgb(255, 99, 132)');
+
+        
+        $chartMauXe->dataset('Số lượng', 'bar', $valuesMauXe)->color('black')->backgroundColor('rgb(128, 12, 232)');
+
+         /* Giá bán */
+        $dongia10_20 = DB::table('xe_mays')
+        ->select('tenxe',  DB::raw('SUM(soluong) as soluong'))
+        ->groupBy('tenxe')
+        ->where('dongia', '>', 40000000)
+        ->where('dongia', '<=', 50000000)
+        ->get();
+        return $dongia10_20;
+        return view('thongkexemay.xemay', compact('chartTenXe', 'chartMauXe'));
     }
 
     function getThongKeXeTrongCuaHang(){
@@ -376,7 +424,7 @@ class XeMayController extends Controller
     }
 
     function getThongKeTenXePDF(){
-        $xemay = session('queryThongKeTenXe');;
+        $xemay = session('queryThongKeTenXe');
         $pdf = \App::make('dompdf.wrapper');
         $pdf->loadHTML($this->data_to_html_ThongKeTenXe($xemay));
         return $pdf->stream();
@@ -402,7 +450,7 @@ class XeMayController extends Controller
                 <table class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                             <th>ID</th>
+                            <th>ID</th>
                             <th>Tên xe</th>
                             <th>Màu xe</th>
                             <th>Đơn giá bán</th>
@@ -415,6 +463,7 @@ class XeMayController extends Controller
                         </tr>
                     </thead>
                     <tbody>';
+                    $soluong = 0; $thanhtien = 0;
                     foreach ($xemay as $xemay) {
                         $output .= '<tr>
                              <td>'. $xemay->id.'</td>
@@ -428,11 +477,96 @@ class XeMayController extends Controller
                             <td>'. $xemay->namsanxuat.'</td>
                             <td><img src="uploads/xemay/'.$xemay->img.'" width="100" height="60"></td>
                         </tr>';
+                         $soluong += $xemay->soluong;
+                        $thanhtien += $xemay->dongia * $xemay->soluong;
                     }
 
                     $output .= '
                     </tbody>
-                </table>
+                </table><h6 style="color:red;">Tổng số lượng: '.$soluong.'<br>Tổng thành tiền: '.number_format($thanhtien, 0, '', '.').'đ</h6>
+            </body>
+            </html>';
+        return $output;
+    }
+
+    function getxemDanhSachTheoTungLoaiXePDF(){
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->loadHTML($this->data_to_html_DanhSachTheoTungLoaiXePDF());
+        return $pdf->stream();
+    }
+
+    function data_to_html_DanhSachTheoTungLoaiXePDF(){
+        $tenxe = XeMay::distinct()->select('tenxe')->get();
+        $output = '<!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <title>Thống kê xe máy</title>
+                 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+                <style>
+                *{ 
+                    font-family: DejaVu Sans !important; 
+                    font-size: 12px;
+                }
+                .hrstyle{
+                    overflow: visible;
+                    padding: 0;
+                    border: none;
+                    border-top: medium double #333;
+                    color: #333;
+                    text-align: center;
+                }
+            </style>
+            </head>
+            <body>
+                <center><h1 style="color: red; font-weight: bold;">DANH SÁCH XE MÁY</h1></center>';
+                foreach ($tenxe as $tenxe) {
+                     $xemay = XeMay::join('loai_bao_hanhs', 'id_loaibaohanh', 'loai_bao_hanhs.id')
+                    ->select('xe_mays.id', 'tenxe', 'mauxe', 'dongia', 'soluong', 'namsanxuat', 'noisanxuat', 'dungtichxylanh', 'donvitinh', 'loai_bao_hanhs.tenloaibaohanh', 'img')
+                    ->where('tenxe', 'like', '%'.$tenxe->tenxe.'%')
+                    ->get();
+                    $output .= '<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">'.$tenxe->tenxe.'</h2>';
+                    $output .= '<table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                             <th>ID</th>
+                            <th>Tên xe</th>
+                            <th>Màu xe</th>
+                            <th>Đơn giá bán</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                            <th>Dung tích</th>
+                            <th>Loại bảo hành</th>
+                            <th>Năm sản xuất</th>
+                            <th>Hình ảnh</th>
+                        </tr>
+                    </thead>
+                    <tbody>';
+                    $soluong = 0; $thanhtien = 0;
+                    foreach ($xemay as $xemay) {
+                        $output .= '<tr>
+                             <td>'. $xemay->id.'</td>
+                            <td>'. $xemay->tenxe.'</td>
+                            <td>'. $xemay->mauxe.'</td>
+                            <td>'. number_format($xemay->dongia, 0, '', '.').' đ</td>
+                            <td>'. $xemay->soluong.'</td>
+                            <td>'. number_format($xemay->dongia * $xemay->soluong, 0, '', '.').'đ</td>
+                            <td>'. $xemay->dungtichxylanh.'</td>
+                            <td>'. $xemay->tenloaibaohanh.'</td>
+                            <td>'. $xemay->namsanxuat.'</td>
+                            <td><img src="uploads/xemay/'.$xemay->img.'" width="100" height="60"></td>
+                        </tr>';
+                        $soluong += $xemay->soluong;
+                        $thanhtien += $xemay->dongia * $xemay->soluong;
+                    }
+
+                    $output .= '
+                    </tbody>
+                </table><h6 style="color:red;">Tổng số lượng: '.$soluong.'<br>Tổng thành tiền: '.number_format($thanhtien, 0, '', '.').'đ</h6>';
+                }
+
+                $output .= '
             </body>
             </html>';
         return $output;

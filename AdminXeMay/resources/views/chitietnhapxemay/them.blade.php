@@ -44,7 +44,7 @@
             <select class="form-control select2" style="width: 100%;" name="id_xemay" required="" onchange="chonXeMay(this.value)">
               <option value="">Chọn</option>
               @foreach($xemay as $xemay)
-              <option value="{{ $xemay->id }}">{{ $xemay->tenxe }}</option>
+              <option value="{{ $xemay->id }}">{{ $xemay->tenxe }} - {{ $xemay->mauxe }} - {{ $xemay->dungtichxylanh }}cc</option>
               @endforeach
             </select>
           </div>

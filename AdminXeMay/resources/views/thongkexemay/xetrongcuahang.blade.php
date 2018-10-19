@@ -25,6 +25,11 @@
       <div class="col-xs-12">
         <div class="box">
           <div class="box-header">
+             <div class="pull-right">
+               <a class="btn btn-warning" href="xemay/xemDanhSachTheoTungLoaiXePDF" target="blank">
+                <i class="fa fa-print"></i> In danh sách theo từng loại xe
+              </a>
+            </div>
          </div>
 
          <!-- /.box-header -->
@@ -88,7 +93,7 @@
       </tfoot>
     </table>
     <div class="col-md-10">
-      <p style="font-size: 1.5em; color: red;">Tổng số xe có trong cửa hàng: {{ $sumsoluong }}</p>
+      <p style="font-size: 1.5em; color: red;">Tổng cộng: {{ $sumsoluong }}</p>
       </div>
   </div>
   <!-- /.box-body -->

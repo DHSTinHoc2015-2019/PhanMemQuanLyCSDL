@@ -10,6 +10,9 @@ use PDF;
 use DB;
 use Session;
 use Carbon\Carbon;
+use Charts;
+use App\User;
+use App\Charts\NhanVien_Chart;
 
 class NhanVienController extends Controller
 {
@@ -379,7 +382,101 @@ class NhanVienController extends Controller
 	}
 
 	function getThongKeIndex(){
-		return view('thongkenhanvien.nhanvien');
+		$countNhanVien = NhanVien::count();
+		
+		$chucvu = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->groupBy('tenchucvu')
+        ->get([
+	      DB::raw('tenchucvu as tenchucvu'),
+	      DB::raw('COUNT(*) as soluong')
+	    ]);
+	    $labelsChucVu = $chucvu->pluck('tenchucvu');
+        $valuesChucVu = $chucvu->pluck('soluong');
+        $chartChucVu = new NhanVien_Chart();
+        $chartChucVu->labels($labelsChucVu);
+        $chartChucVu->loaderColor('rgb(255, 99, 132)');
+  		
+        $chartChucVu->dataset('số lượng', 'bar', $valuesChucVu)->color('rgb(255, 99, 132)')->backgroundColor('rgb(255, 99, 132)');
+
+        /* Giới tính */
+
+        $gioitinh = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->groupBy('gioitinh')
+        ->get([
+	      DB::raw('gioitinh as gioitinh'),
+	      DB::raw('COUNT(*)/'.$countNhanVien.'*100 as soluong')
+	    ]);
+
+	    $labelsGioiTinh = $gioitinh->pluck('gioitinh');
+
+        $valuesGioiTinh = $gioitinh->pluck('soluong');
+
+        $chartGioiTinh = new NhanVien_Chart();
+        $chartGioiTinh->labels($labelsGioiTinh);
+        $chartGioiTinh->loaderColor('rgb(255, 99, 132)');
+  		
+        $chartGioiTinh->dataset('số lượng', 'pie', $valuesGioiTinh)->backgroundColor(['red', 'blue']);
+
+        /* Tuổi */
+        $tuoi20_30 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereYear('ngaysinh', '>=', Carbon::now()->year - 30)
+        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 20)
+        ->count();
+        $tuoi30_40 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereYear('ngaysinh', '>=', Carbon::now()->year - 40)
+        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 30)
+        ->count();
+        $tuoi40_50 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereYear('ngaysinh', '>=', Carbon::now()->year - 50)
+        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 40)
+        ->count();
+		$tuoi50_60 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereYear('ngaysinh', '>=', Carbon::now()->year - 60)
+        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 50)
+        ->count();
+
+        $arrTuoi = [$tuoi20_30, $tuoi30_40, $tuoi40_50, $tuoi50_60];
+
+        $chartTuoi = new NhanVien_Chart();
+        $chartTuoi->labels(['20 - 30 tuổi','30 - 40 tuổi','40 - 50 tuổi','50 - 60 tuổi']);
+        $chartTuoi->loaderColor('rgb(255, 99, 132)');
+  		
+        $chartTuoi->dataset('Số lượng', 'bar', $arrTuoi)->color('black')->backgroundColor('blue');
+
+         /* Lương */
+        $luong0_5 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereRaw('luongcoban * hesoluong + phucap >= '. 0)
+        ->whereRaw('luongcoban * hesoluong + phucap < '. 5000000)
+        ->count();
+		$luong5_10 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereRaw('luongcoban * hesoluong + phucap >= '. 5000000)
+        ->whereRaw('luongcoban * hesoluong + phucap < '. 10000000)
+        ->count();
+		$luong10_20 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereRaw('luongcoban * hesoluong + phucap >= '. 10000000)
+        ->whereRaw('luongcoban * hesoluong + phucap < '. 20000000)
+        ->count();
+		$luong20_30 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereRaw('luongcoban * hesoluong + phucap >= '. 20000000)
+        ->whereRaw('luongcoban * hesoluong + phucap < '. 30000000)
+        ->count();
+		$luong30_40 = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereRaw('luongcoban * hesoluong + phucap >= '. 30000000)
+        ->whereRaw('luongcoban * hesoluong + phucap < '. 40000000)
+        ->count();
+        $luong40_ = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->whereRaw('luongcoban * hesoluong + phucap >= '. 40000000)
+        ->count();
+
+
+        $arrLuong = [$luong0_5, $luong5_10, $luong10_20, $luong20_30, $luong30_40, $luong40_];
+
+        $chartLuong = new NhanVien_Chart();
+        $chartLuong->labels(['< 5 triệu','5 - 10 triệu','10 - 20 triệu','20 - 30 triệu','30 - 40 triệu', '> 40 triệu']);
+        $chartLuong->loaderColor('rgb(255, 99, 132)');
+  		
+        $chartLuong->dataset('Số lượng', 'bar', $arrLuong)->color('black')->backgroundColor('yellow');
+		return view('thongkenhanvien.nhanvien', compact('chartChucVu', 'chartGioiTinh', 'chartTuoi', 'chartLuong'));
 	}
 
 	function getThongKeChucVu(){
@@ -410,7 +507,7 @@ class NhanVienController extends Controller
 	function getxemThongKeChucVuPDF(){
     	// $query = session('queryThongKeChucVu');
 		// $nhanvien = DB::select(DB::raw($query));
-		$nhanvien = session('queryThongKeChucVu');;
+		$nhanvien = session('queryThongKeChucVu');
 		// return $nhanvien;
 		$pdf = \App::make('dompdf.wrapper');
 		$pdf->loadHTML($this->data_to_html_thongKeChucVu($nhanvien));
@@ -448,6 +545,7 @@ class NhanVienController extends Controller
 						</tr>
 					</thead>
 					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
 					foreach ($nhanvien as $nhanvien) {
 						$output .= '<tr>
 							 <td>'. $nhanvien->id.'</td>
@@ -459,16 +557,103 @@ class NhanVienController extends Controller
 			                <td>'. $nhanvien->quequan.'</td>			               
 			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
 						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
 					}
 
 					$output .= '
 					</tbody>
 
-				</table>
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>
 			</body>
 			</html>';
 		return $output;
 	}
+
+	function getxemThongKeToanBoChucVuPDF(){
+		$pdf = \App::make('dompdf.wrapper');
+		// $chucvu = ChucVu::distinct()->select('tenchucvu')->get()[0]->tenchucvu;
+		// return $chucvu;
+		$pdf->loadHTML($this->data_to_html_thongKeToanBoChucVu());
+		return $pdf->stream();
+	}
+
+	function data_to_html_thongKeToanBoChucVu(){
+		$chucvu = ChucVu::distinct()->select('tenchucvu')->get();
+		$output = '<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>Danh sách thống kê nhân viên</title>
+				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+				<style>
+				*{ 
+					font-family: DejaVu Sans !important; 
+					font-size: 12px;
+				}
+				#hrstyle{
+					overflow: visible;
+					padding: 0;
+					border: none;
+					border-top: medium double #333;
+					color: #333;
+					text-align: center;
+				}
+			</style>
+			</head>
+			<body>
+				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN THEO CHỨC VỤ</h1></center>';
+				foreach ($chucvu as $chucvu) {
+					 $nhanvien = NhanVien::danhSachTheoChucVu($chucvu->tenchucvu);
+					 $output .= '<hr id="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">'.$chucvu->tenchucvu.'</h2>';
+					 $output .= '<table class="table table-bordered table-hover">
+					<thead>
+						<tr class="table-success">
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+					$output .= '
+					</tbody>
+
+				</table>
+				<h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+				}
+				
+				$output .='
+					
+			</body>
+			</html>';
+		return $output;
+	}
+
 
 	function getThongKeGioiTinh(){
 		$nhanvien = NhanVien::danhSach();
@@ -532,6 +717,7 @@ class NhanVienController extends Controller
 						</tr>
 					</thead>
 					<tbody>';
+					$i = 0; $luong = 0;
 					foreach ($nhanvien as $nhanvien) {
 						$output .= '<tr>
 							 <td>'. $nhanvien->id.'</td>
@@ -543,12 +729,92 @@ class NhanVienController extends Controller
 			                <td>'. $nhanvien->quequan.'</td>			               
 			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
 						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
 					}
 
 					$output .= '
 					</tbody>
 
 				</table>
+				<h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ</h6>
+			</body>
+			</html>';
+		return $output;
+	}
+
+	function getxemThongKeToanBoGioiTinhPDF(){
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->loadHTML($this->data_to_html_thongKeToanBoGioiTinh());
+		return $pdf->stream();
+	}
+
+	function data_to_html_thongKeToanBoGioiTinh(){
+		$gioitinh = NhanVien::distinct()->select('gioitinh')->get();
+		$output = '<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>Danh sách thống kê nhân viên</title>
+				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+				<style>
+				*{ 
+					font-family: DejaVu Sans !important; 
+					font-size: 12px;
+				}
+				#hrstyle{
+					overflow: visible;
+					padding: 0;
+					border: none;
+					border-top: medium double #333;
+					color: #333;
+					text-align: center;
+				}
+			</style>
+			</head>
+			<body>
+				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN THEO GIỚI TÍNH</h1></center>';
+				foreach ($gioitinh as $gioitinh) {
+					 $nhanvien = NhanVien::danhSachTheoGioiTinh($gioitinh->gioitinh);
+					 $output .= '<hr id="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">'.$gioitinh->gioitinh.'</h2>';
+					 $output .= '<table class="table table-bordered table-hover">
+					<thead>
+						<tr class="table-success">
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+					}
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ</h6>';
+				}
+				
+				$output .='
+					
 			</body>
 			</html>';
 		return $output;
@@ -701,6 +967,7 @@ class NhanVienController extends Controller
 						</tr>
 					</thead>
 					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
 					foreach ($nhanvien as $nhanvien) {
 						$output .= '<tr>
 							 <td>'. $nhanvien->id.'</td>
@@ -712,12 +979,477 @@ class NhanVienController extends Controller
 			                <td>'. $nhanvien->quequan.'</td>			               
 			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
 						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
 					}
 
 					$output .= '
 					</tbody>
 
-				</table>
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>
+			</body>
+			</html>';
+		return $output;
+	}
+
+	function getxemThongKeToanBoLuongPDF(){
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->loadHTML($this->data_to_html_thongKeToanBoLuong());
+		return $pdf->stream();
+	}
+
+	function data_to_html_thongKeToanBoLuong(){
+		$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+        ->whereRaw('luongcoban * hesoluong + phucap >= 1000000')
+        ->whereRaw('luongcoban * hesoluong + phucap <= 10000000')
+        ->get();
+		$output = '<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>Danh sách thống kê nhân viên</title>
+				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+				<style>
+				*{ 
+					font-family: DejaVu Sans !important; 
+					font-size: 12px;
+				}
+				.hrstyle{
+					overflow: visible;
+					padding: 0;
+					border: none;
+					border-top: medium double #333;
+					color: #333;
+					text-align: center;
+				}
+			</style>
+			</head>
+			<body>
+				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN</h1></center>
+				<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Lương từ 1.000.000đ - 10.000.000đ</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+
+				$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+		        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+		        ->whereRaw('luongcoban * hesoluong + phucap >= 10000000')
+		        ->whereRaw('luongcoban * hesoluong + phucap <= 20000000')
+		        ->get();
+
+		        $output .='<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Lương từ 10.000.000đ - 20.000.000đ</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+				$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+		        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+		        ->whereRaw('luongcoban * hesoluong + phucap >= 20000000')
+		        ->whereRaw('luongcoban * hesoluong + phucap <= 30000000')
+		        ->get();
+
+		        $output .='<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Lương từ 20.000.000đ - 30.000.000đ</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+				$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+		        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+		        ->whereRaw('luongcoban * hesoluong + phucap >= 30000000')
+		        ->whereRaw('luongcoban * hesoluong + phucap <= 40000000')
+		        ->get();
+
+		        $output .='<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Lương từ 30.000.000đ - 40.000.000đ</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table></table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+				$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+		        ->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+		        ->whereRaw('luongcoban * hesoluong + phucap >= 40000000')
+		        ->whereRaw('luongcoban * hesoluong + phucap <= 50000000')
+		        ->get();
+
+		        $output .='<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Lương từ 40.000.000đ - 50.000.000đ</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+				$output .= '
+			</body>
+			</html>';
+		return $output;
+	}
+
+	function getxemThongKeToanBoTuoiPDF(){
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->loadHTML($this->data_to_html_thongKeToanBoTuoi());
+		return $pdf->stream();
+	}
+
+	function data_to_html_thongKeToanBoTuoi(){
+		$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+		->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+        ->whereYear('ngaysinh', '>=', Carbon::now()->year - 30)
+        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 20)
+        ->get();
+		$output = '<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+				<title>Danh sách thống kê nhân viên</title>
+				 <link rel="stylesheet" href="bower_components/bootstrap4.1/dist/css/bootstrap.css">
+				<style>
+				*{ 
+					font-family: DejaVu Sans !important; 
+					font-size: 12px;
+				}
+				.hrstyle{
+					overflow: visible;
+					padding: 0;
+					border: none;
+					border-top: medium double #333;
+					color: #333;
+					text-align: center;
+				}
+			</style>
+			</head>
+			<body>
+				<center><h1 style="color: red; font-weight: bold; text-transform: uppercase;">DANH SÁCH NHÂN VIÊN</h1></center>
+				<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Từ 20 - 30 tuổi</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+
+				$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+				->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+		        ->whereYear('ngaysinh', '>=', Carbon::now()->year - 40)
+		        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 30)
+		        ->get();
+		        $output .='<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Từ 30 - 40 tuổi</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+
+				$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+				->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+		        ->whereYear('ngaysinh', '>=', Carbon::now()->year - 50)
+		        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 40)
+		        ->get();
+
+		        $output .='<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Từ 40 - 50 tuổi</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table></table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+				
+				$nhanvien = NhanVien::join('chuc_vus', 'id_chucvu', '=', 'chuc_vus.id')
+				->select('nhan_viens.id', 'hoten', 'ngaysinh', 'gioitinh', 'socmnd', 'sodienthoai', 'quequan', 'chuoibaomat', 'img','luongcoban','hesoluong', 'phucap', 'tenchucvu')
+		        ->whereYear('ngaysinh', '<=', Carbon::now()->year - 50)
+		        ->get();
+
+		        $output .='<hr class="hrstyle" style="margin-top: 2em;"><h2 style="text-transform: uppercase;">Trên 50 tuổi</h2>
+				<table class="table table-bordered table-hover">
+					<thead>
+						<tr>
+						    <th>ID</th>
+			                <th>Họ tên</th>
+			                <th>Ngày sinh</th>
+			                <th>Giới tính</th>
+			                <th>Số CMND</th>
+			                <th>Số ĐT</th>
+			                <th>Quê quán</th>
+			                <th>Lương</th>
+						</tr>
+					</thead>
+					<tbody>';
+					$i = 0; $luong = 0; $nhanviennam = 0; $nhanviennu = 0;
+					foreach ($nhanvien as $nhanvien) {
+						$output .= '<tr>
+							 <td>'. $nhanvien->id.'</td>
+			                <td>'. $nhanvien->hoten.'</td>
+			                <td>'. $nhanvien->ngaysinh.'</td>
+			                <td>'. $nhanvien->gioitinh.'</td>
+			                <td>'. $nhanvien->socmnd.'</td>
+			                <td>'. $nhanvien->sodienthoai.'</td>
+			                <td>'. $nhanvien->quequan.'</td>			               
+			                <td>'. number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.').'</td>
+						</tr>';
+						$i++; 
+						$luong += $nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap;
+						if($nhanvien->gioitinh == 'Nam') $nhanviennam++;
+						else $nhanviennu++;
+					}
+
+					$output .= '
+					</tbody>
+
+				</table><h6 style="color:red;">Tổng nhân viên: '.$i."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&nbsp;"."&nbsp;".'Tổng lương: '.number_format($luong, 0, '', '.').'đ<br>Tổng nhân viên nam: '.$nhanviennam."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;"."&emsp;".'Tổng nhân viên nữ: '.$nhanviennu.'</h6>';
+				$output .= '
 			</body>
 			</html>';
 		return $output;
