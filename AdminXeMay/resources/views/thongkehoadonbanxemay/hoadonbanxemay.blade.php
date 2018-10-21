@@ -1,3 +1,4 @@
+
 @extends('layout.index')
 
 @section('css')
@@ -41,9 +42,9 @@
               <div class="panel panel-primary animated fadeInLeft" style="animation-duration: 4s;">
                 <div class="panel-heading"><center><b style="font-size: 1.5em;">TIÊU CHÍ THỐNG KÊ</b></center></div>
                 <div class="panel-body">
-                <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THÁNG NÀY</a>
-                <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN NĂM NÀY</a>
-                <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO THÁNG</a>
+                <a href="thongke/hoadonbanxemay/thanghientai" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THÁNG HIỆN TẠI</a>
+                <a href="thongke/hoadonbanxemay/namhientai" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN NĂM HIỆN TẠI</a>
+                <a href="thongke/hoadonbanxemay/chonthang" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO THÁNG</a>
                 <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO QUÝ</a>
                 <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO NĂM</a>
                 <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO KHOẢNG THỜI GIAN</a>

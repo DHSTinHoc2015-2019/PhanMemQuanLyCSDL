@@ -192,22 +192,4 @@
     })
   })
 </script>
-<script>
-  function Delete(id) {
-    swal({
-      title: "Bạn có chắc chắn muốn xóa dữ liệu?",
-      text: "Sau khi xóa, bạn sẽ không thể phục hồi dữ liệu này!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    })
-    .then((isConfirm) => {
-      if (isConfirm) {
-        window.location.href = "nhanvien/xoa/" + id;
-      } else {
-        swal("Dữ liệu của bạn không thay đổi!");
-      }
-    });
-  }
-</script>
 @endsection

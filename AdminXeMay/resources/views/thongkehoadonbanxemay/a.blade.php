@@ -1,3 +1,4 @@
+
 @extends('layout.index')
 
 @section('css')
@@ -10,22 +11,23 @@
   <!-- Content Header (Page header) -->
    <section class="content-header">
     <h1>
-      <b>THỐNG KÊ XE MÁY</b>
+      <b>THỐNG KÊ HÓA ĐƠN BÁN XE MÁY</b>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i>Admin</a></li>
-      <li>Thống kê xe máy</li>
+      <li>Thống kê hóa đơn bán xe máy</li>
     </ol>
   </section>
 
   <!-- Main content -->
   <section class="content" style="font-size: 1.2em;">
   <div class="row">
+
     <div class="col-md-6">
        <!-- Default box -->
     <div class="box">
       <div class="box-header with-border">
-        <h1 class="box-title"><b>TÊN XE MÁY</b></h1>
+        <h1 class="box-title"><b>XE MÁY BÁN THÁNG NÀY THEO TÊN XE</b></h1>
           
         <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -38,16 +40,16 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-12">
-                {!! $chartTenXe->container() !!}
+                {!! $chartThangNay->container() !!}
             </div>
-            {!! $chartTenXe->script() !!}
+            {!! $chartThangNay->script() !!}
           </div>
           </div>
         <!-- /.box-body -->
           <div class="box-footer">
-            <a href="thongke/xemay/tenxe" class="btn btn-success">Chi tiết</a>
+            <a href="thongke/hoadonxemay/thanghientai" class="btn btn-success">Chi tiết</a>
             <div class="pull-right">
-              <a class="btn btn-warning" href="xemay/xemDanhSachTheoTungLoaiXePDF" target="blank">
+              <a class="btn btn-warning" href="" target="blank">
                 <i class="fa fa-print"></i> In toàn bộ
               </a>
             </div>
@@ -58,11 +60,11 @@
       </div>
       <!-- /.col-md -->
   
-      <div class="col-md-6">
+       <div class="col-md-6">
        <!-- Default box -->
     <div class="box">
       <div class="box-header with-border">
-        <h1 class="box-title"><b>MÀU XE MÁY</b></h1>
+        <h1 class="box-title"><b>XE MÁY BÁN NĂM NÀY THEO TÊN XE</b></h1>
           
         <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -75,16 +77,16 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-12">
-                {!! $chartMauXe->container() !!}
+                {!! $chartNamNay->container() !!}
             </div>
-            {!! $chartMauXe->script() !!}
+            {!! $chartNamNay->script() !!}
           </div>
         </div>
         <!-- /.box-body -->
           <div class="box-footer">
-           <a href="thongke/xemay/mauxe" class="btn btn-success">Chi tiết</a>
+           <a href="" class="btn btn-success">Chi tiết</a>
            <div class="pull-right">
-              <a class="btn btn-warning" href="xemay/xemDanhSachTheoMauXePDF" target="blank">
+              <a class="btn btn-warning" href="" target="blank">
                 <i class="fa fa-print"></i> In toàn bộ
               </a>
             </div>
@@ -94,6 +96,81 @@
       <!-- /.box -->
       </div>
       <!-- /.col-md -->
+
+      <div class="col-md-12">
+       <!-- Default box -->
+    <div class="box">
+      <div class="box-header with-border">
+        <h1 class="box-title"><b>XE MÁY BÁN THÁNG NÀY THEO TỪNG NGÀY</b></h1>
+          
+        <div class="box-tools pull-right">
+          <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+          title="Collapse">
+          <i class="fa fa-minus"></i></button>
+          <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+            <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+                {!! $chartThangNayTheoNgay->container() !!}
+            </div>
+            {!! $chartThangNayTheoNgay->script() !!}
+          </div>
+        </div>
+        <!-- /.box-body -->
+          <div class="box-footer">
+           <a href="" class="btn btn-success">Chi tiết</a>
+           <div class="pull-right">
+              <a class="btn btn-warning" href="" target="blank">
+                <i class="fa fa-print"></i> In toàn bộ
+              </a>
+            </div>
+          </div>
+          <!-- /.box-footer-->
+        </div>
+      <!-- /.box -->
+      </div>
+      <!-- /.col-md -->
+
+      <div class="col-md-12">
+       <!-- Default box -->
+    <div class="box">
+      <div class="box-header with-border">
+        <h1 class="box-title"><b>XE MÁY BÁN NĂM NÀY THEO TỪNG THÁNG</b></h1>
+          
+        <div class="box-tools pull-right">
+          <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+          title="Collapse">
+          <i class="fa fa-minus"></i></button>
+          <button type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">
+            <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="box-body">
+          <div class="row">
+            <div class="col-md-12">
+                {!! $chartNamNayTheoThang->container() !!}
+            </div>
+            {!! $chartNamNayTheoThang->script() !!}
+          </div>
+        </div>
+        <!-- /.box-body -->
+          <div class="box-footer">
+           <a href="" class="btn btn-success">Chi tiết</a>
+           <div class="pull-right">
+              <a class="btn btn-warning" href="" target="blank">
+                <i class="fa fa-print"></i> In toàn bộ
+              </a>
+            </div>
+          </div>
+          <!-- /.box-footer-->
+        </div>
+      <!-- /.box -->
+      </div>
+      <!-- /.col-md -->
+
 
       <div class="col-md-2"></div>
       <div class="col-md-8">
@@ -131,7 +208,7 @@
               <div class="box-footer">
                 <a href="thongke/xemay/dongia" class="btn btn-success">Chi tiết</a>
                 <div class="pull-right">
-                  <a class="btn btn-warning" href="xemay/xemDanhSachTheoDonGiaPDF" target="blank">
+                  <a class="btn btn-warning" href="" target="blank">
                     <i class="fa fa-print"></i> In toàn bộ
                   </a>
                 </div>
@@ -142,7 +219,9 @@
         </div>
         <div class="col-md-2"></div>
         <!-- /.col-md -->
+        --}}
     </div>
+  </div>
     
   </section>
   <!-- /.content -->

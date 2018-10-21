@@ -23,8 +23,8 @@ class XeMay extends Model
 
     function scopeDanhSachXeMayTheoID($query, $id){
         return $query->join('loai_bao_hanhs', 'id_loaibaohanh', 'loai_bao_hanhs.id')
-    	->select('xe_mays.id', 'tenxe', 'mauxe', 'dongia', 'soluong', 'namsanxuat', 'noisanxuat', 'dungtichxylanh', 'donvitinh', 'loai_bao_hanhs.tenloaibaohanh', 'img')
-    	->where('xe_mays.id', $id)
-    	->get();
+        ->select('xe_mays.id', 'tenxe', 'mauxe', 'dongia', 'soluong', 'namsanxuat', 'noisanxuat', 'dungtichxylanh', 'donvitinh', 'loai_bao_hanhs.tenloaibaohanh', 'img')
+        ->where('xe_mays.id', $id)
+        ->get();
     }
 }

@@ -88,6 +88,10 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('xemay/viewSearchPDF', 'XeMayController@getViewSearchPDF'); 
     Route::get('xemay/xemThongKeTenXePDF', 'XeMayController@getThongKeTenXePDF');
     Route::get('xemay/xemDanhSachTheoTungLoaiXePDF', 'XeMayController@getxemDanhSachTheoTungLoaiXePDF');
+    Route::get('xemay/xemThongKeMauXePDF', 'XeMayController@getxemThongKeMauXePDF');
+    Route::get('xemay/xemDanhSachTheoMauXePDF', 'XeMayController@getxemDanhSachTheoMauXePDF');
+    Route::get('xemay/xemThongKeDonGiaPDF', 'XeMayController@getxemThongKeDonGiaPDF');
+    Route::get('xemay/xemDanhSachTheoDonGiaPDF', 'XeMayController@getxemDanhSachTheoDonGiaPDF');
     
     Route::get('loaiphutung', 'LoaiPhuTungController@index');
     Route::get('loaiphutung/sua/{id}', 'LoaiPhuTungController@getSua');
@@ -141,7 +145,17 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::post('hoadonbanxemay/them', 'HoaDonBanXeMayController@postThem');
     Route::get('hoadonbanxemay/xoa/{id}', 'HoaDonBanXeMayController@getXoa');
     Route::get('hoadonbanxemay/viewPDF', 'HoaDonBanXeMayController@getViewPDF');
-    // Route::get('hoadonbanxemay/in/{id}', 'HoaDonBanXeMayController@getIn'); 
+    // Route::get('hoadonbanxemay/in/{id}', 'HoaDonBanXeMayController@getIn');
+    /*Tháng hiện tại*/
+    Route::get('hoadonbanxemay/xemThangHienTaiDanhSachTenXePDF', 'HoaDonBanXeMayController@getxemThangHienTaiDanhSachTenXePDF');
+    Route::get('hoadonbanxemay/xemThangHienTaiDanhSachTheoNgayPDF', 'HoaDonBanXeMayController@getxemThangHienTaiDanhSachTheoNgayPDF');
+    Route::get('hoadonbanxemay/xemThongKeThangHienTaiTenXePDF', 'HoaDonBanXeMayController@getxemThongKeThangHienTaiTenXePDF');
+    Route::get('hoadonbanxemay/xemThongKeThangHienTaiTheoNgayPDF', 'HoaDonBanXeMayController@getxemThongKeThangHienTaiTheoNgayPDF');
+    /*Năm hiện tại*/
+    Route::get('hoadonbanxemay/xemNamHienTaiDanhSachTenXePDF', 'HoaDonBanXeMayController@getxemNamHienTaiDanhSachTenXePDF');
+    Route::get('hoadonbanxemay/xemThongKeNamHienTaiTenXePDF', 'HoaDonBanXeMayController@getxemThongKeNamHienTaiTenXePDF');
+    Route::get('hoadonbanxemay/xemNamHienTaiDanhSachTheoThangPDF', 'HoaDonBanXeMayController@getxemNamHienTaiDanhSachTheoThangPDF');
+    Route::get('hoadonbanxemay/xemThongKeNamHienTaiTheoThangPDF', 'HoaDonBanXeMayController@getxemThongKeNamHienTaiTheoThangPDF');
     
     Route::get('hoadonbanphutungphukien', 'HoaDonBanPhuTungPhuKienController@index');
     Route::get('hoadonbanphutungphukien/sua/{id}', 'HoaDonBanPhuTungPhuKienController@getSua');
@@ -181,6 +195,7 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('ajax/getImgPhuTungBangPhuTungHoaDon/{id}', 'AjaxController@getImgPhuTungBangPhuTungHoaDon');
     Route::get('ajax/getImgPhuKienBangPhuKien/{id}', 'AjaxController@getImgPhuKienBangPhuKien');
     Route::get('ajax/getImgPhuKienBangPhuKienHoaDon/{id}', 'AjaxController@getImgPhuKienBangPhuKienHoaDon');
+    Route::get('ajax/getThongKeXeMayTheoGia/{gia}', 'AjaxController@getThongKeXeMayTheoGia');
 
 
     //Tìm kiếm
@@ -202,13 +217,10 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
         Route::group(['prefix' => 'nhanvien'], function(){
             Route::get('chucvu', 'NhanVienController@getThongKeChucVu');
             Route::post('chucvu', 'NhanVienController@postThongKeChucVu');
-
             Route::get('gioitinh', 'NhanVienController@getThongKeGioiTinh');
             Route::post('gioitinh', 'NhanVienController@postThongKeGioiTinh');
-
             Route::get('tuoi', 'NhanVienController@getThongKeTuoi');
             Route::post('tuoi', 'NhanVienController@postThongKeTuoi');
-
             Route::get('luong', 'NhanVienController@getThongKeLuong');
             Route::post('luong', 'NhanVienController@postThongKeLuong');
         });
@@ -219,6 +231,10 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
 
             Route::get('tenxe', 'XeMayController@getThongKeTenXe');
             Route::post('tenxe', 'XeMayController@postThongKeTenXe');
+            Route::get('mauxe', 'XeMayController@getThongKeMauXe');
+            Route::post('mauxe', 'XeMayController@postThongKeMauXe');
+            Route::get('dongia', 'XeMayController@getThongKeDonGia');
+            Route::post('dongia', 'XeMayController@postThongKeDonGia');
         });
 
         Route::get('phutungphukien', 'PhuTungPhuKienController@getThongKeIndex');
@@ -237,8 +253,21 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
 
         Route::get('hoadonbanxemay', 'HoaDonBanXeMayController@getThongKeIndex');
         Route::group(['prefix' => 'hoadonbanxemay'], function(){
-            // Route::get('tenxe', 'PhuTungPhuKienController@getThongKeTenXe');
-            // Route::post('tenxe', 'PhuTungPhuKienController@postThongKeTenXe');
+            Route::get('thanghientai', 'HoaDonBanXeMayController@getThongKeThangHienTai');
+            Route::get('namhientai', 'HoaDonBanXeMayController@getThongKeNamHienTai');
+            Route::get('thanghientaitheotenxe', 'HoaDonBanXeMayController@getThangHienTaiTheoTenXe');
+            Route::post('thanghientaitheotenxe', 'HoaDonBanXeMayController@postThangHienTaiTheoTenXe');
+            Route::get('thanghientaitheongay', 'HoaDonBanXeMayController@getThangHienTaiTheoNgay');
+            Route::post('thanghientaitheongay', 'HoaDonBanXeMayController@postThangHienTaiTheoNgay');
+            /* Năm hiện tại */
+            Route::get('namhientaitheotenxe', 'HoaDonBanXeMayController@getNamHienTaiTheoTenXe');
+            Route::post('namhientaitheotenxe', 'HoaDonBanXeMayController@postNamHienTaiTheoTenXe');
+            Route::get('namhientaitheothang', 'HoaDonBanXeMayController@getNamHienTaiTheoThang');
+            Route::post('namhientaitheothang', 'HoaDonBanXeMayController@postNamHienTaiTheoThang');
+             /* Thống kê theo tháng */
+            Route::get('chonthang', 'HoaDonBanXeMayController@getChonThang');
+            Route::post('chonthang', 'HoaDonBanXeMayController@postChonThang');
+
         });
     });
 });
@@ -294,11 +323,38 @@ Route::get('demosession/tao', function () {
     else echo "khong";
 });
 
-Route::get('api/{d}', function($d){
-  // Get the number of days to show data for, with a default of 7
-  // $days = Input::get('days', 7);
-  $days = $d;
+//Gốc
+// Route::get('api/{d}', function($d){
+//   // Get the number of days to show data for, with a default of 7
+//   // $days = Input::get('days', 7);
+//   $days = $d;
 
+  
+//   $range = Carbon\Carbon::now()->subDays($d);
+//   $stats = DB::table('hoa_don_ban_xe_mays')
+//     ->where('created_at', '>=', $range)
+//     ->groupBy('date')
+//     ->orderBy('date', 'ASC')
+//     ->get([
+//       DB::raw('Date(created_at) as date'),
+//       DB::raw('COUNT(*) as value')
+//     ])->toJSON();
+
+//   return $stats;
+// });
+
+Route::get('api/{d}', function($d){
+    // $arrGia = explode('-', $gia);
+
+    // $dongia10_20 = DB::table('xe_mays')
+    // ->select(DB::raw('concat(tenxe, \' \', mauxe) as ten'),  DB::raw('SUM(soluong) as soluong'))
+    // ->groupBy('tenxe', 'mauxe')
+    // ->where('dongia', '>', $arrGia[0])
+    // ->where('dongia', '<=', $arrGia[1])
+    // ->get()->toJSON();;
+    // return $dongia10_20;
+
+  $days = $d;
   
   $range = Carbon\Carbon::now()->subDays($d);
   $stats = DB::table('hoa_don_ban_xe_mays')

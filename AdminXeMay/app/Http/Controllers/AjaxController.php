@@ -109,4 +109,16 @@ class AjaxController extends Controller
 		</div>';
 		return $str;
 	}
+
+	function getThongKeXeMayTheoGia($gia){
+		$arrGia = explode('-', $gia);
+
+	    $dongia10_20 = DB::table('xe_mays')
+	    ->select(DB::raw('concat(tenxe, \' \', mauxe) as ten'),  DB::raw('SUM(soluong) as soluong'))
+	    ->groupBy('tenxe', 'mauxe')
+	    ->where('dongia', '>', $arrGia[0])
+	    ->where('dongia', '<=', $arrGia[1])
+	    ->get()->toJSON();;
+	    return $dongia10_20;
+	}
 }

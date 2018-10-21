@@ -221,6 +221,5 @@
     <!-- /.content-wrapper -->
     @endsection
 @section('script')
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js" charset="utf-8"></script>
- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js" charset="utf-8"></script>
+  <script src="bower_components/charts/Chart.bundle.js" charset="utf-8"></script>
 @endsection

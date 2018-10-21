@@ -11,11 +11,11 @@
   <!-- Content Header (Page header) -->
   <section class="content-header">
     <h1>
-      <b>Thống kê theo độ tuổi nhân viên</b>
+      <b>Thống kê xe máy bán tháng hiện tại theo từng ngày</b>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i> Admin</a></li>
-      <li>Thống kê độ tuổi nhân viên</li>
+      <li>Thống kê xe máy bán tháng hiện tại theo từng ngày</li>
     </ol>
   </section>
 
@@ -27,7 +27,7 @@
           <div class="box-header">
             <div class="col-xs-12">
               <!-- Form -->
-              <form action="thongke/nhanvien/tuoi" method="post" enctype="application/x-www-form-urlencoded">
+              <form action="thongke/hoadonbanxemay/thanghientaitheongay" method="post" enctype="application/x-www-form-urlencoded">
                 @csrf
                 <div class="box box-default" style="border: none;">
                   <div class="box-header with-border" style="border: none;">
@@ -44,42 +44,20 @@
                       <div class="form-group">
                         <div style="font-size: 1.3em; font-weight: bold;">
                           <label>
-                            Chọn tuổi từ
+                            Chọn ngày
                           </label>
                         </div>
                       </div>
                     </div>
                     <!-- /.col -->
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                       <div class="form-group">
-                        <select class="form-control" name="tuoitu">
+                        <select class="form-control" name="ngay">
                           <option value="">Chọn</option>
-                          @for ($i = 15; $i < 70; $i++)
-                              <option value="{{ $i }}">{{ $i }}</option>
-                          @endfor
-                        </select>
-                      </div>
-                    </div>
-
-                    <div class="col-md-1">
-                      <div class="form-group">
-                        <div style="font-size: 1.3em; font-weight: bold;">
-                          <label>
-                            Đến
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- /.col -->
-
-                    <div class="col-md-2">
-                      <div class="form-group">
-                        <select class="form-control" name="tuoiden">
-                          <option value="">Chọn</option>
-                          @for ($i = 15; $i < 70; $i++)
-                              <option value="{{ $i }}">{{ $i }}</option>
-                          @endfor
+                            @foreach($ngay as $ngay)
+                            <option value="{{ $ngay}}">{{ $ngay }}</option>
+                            @endforeach
                         </select>
                       </div>
                     </div>
@@ -88,14 +66,14 @@
                     <div class="col-md-2">
                        <button type="submit" class="btn btn-primary">THỐNG KÊ</button>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-4">
                       <div class="pull-right">
                          @if(!empty($sum))
-                        <a class="btn btn-warning" href="nhanvien/xemThongKeTuoiPDF" target="blank">
+                        <a class="btn btn-warning" href="hoadonbanxemay/xemThongKeThangHienTaiTheoNgayPDF" target="blank">
                           <i class="fa fa-print"></i> In danh sách
                         </a>
                         @endif
-                        <a class="btn btn-warning" href="nhanvien/xemThongKeToanBoTuoiPDF" target="blank">
+                         <a class="btn btn-warning" href="hoadonbanxemay/xemThangHienTaiDanhSachTheoNgayPDF" target="blank">
                           <i class="fa fa-print"></i> In toàn bộ
                         </a>
                       </div>
@@ -117,69 +95,72 @@
 
          <!-- /.box-header -->
          <div class="box-body">
+           <!-- /.box-header -->
+         <div class="box-body">
           <table id="example" class="table table-bordered table-hover">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Họ tên</th>
-                <th>Ngày sinh</th>
-                <th>Giới tính</th>
-                <th>Số CMND</th>
-                <th>Số ĐT</th>
-                <th>Quê quán</th>
-                <th>Chức vụ</th>
-                <th>Phụ cấp</th>
-                <th>Lương</th>
-                <th>Ảnh</th>
-                <th>In</th>
-              </tr>
-            </thead>
-            <tbody>
-             @foreach($nhanvien as $nhanvien)
-             <tr>
-              <td>{{ $nhanvien->id }}</td>
-              <td>{{ $nhanvien->hoten }}</td>
-              <td>{{ $nhanvien->ngaysinh }}</td>
-              <td>{{ $nhanvien->gioitinh }}</td>
-              <td>{{ $nhanvien->socmnd }}</td>
-              <td>{{ $nhanvien->sodienthoai }}</td>
-              <td>{{ $nhanvien->quequan }}</td>
-              <td>{{ $nhanvien->tenchucvu }}</td>
-              <td>{{ $nhanvien->phucap }}</td>
-              <td>{{ number_format($nhanvien->luongcoban * $nhanvien->hesoluong + $nhanvien->phucap, 0, '', '.') }}</td>
-              <td>
-                <a href="uploads/user/{{ $nhanvien->img }}" target="blank"><img src="uploads/user/{{ $nhanvien->img }}" width="100" height="60"></a>
-              </td>
-              <td>
-                 <a class="btn btn-warning" href="nhanvien/in/{{ $nhanvien->id }}" target="blank">
-                  <i class="fa fa-print"></i>
-                </a>
-              </td>
-        </tr>
-        @endforeach
-      </tbody>
-      <tfoot>
-        <tr>
-          <th>ID</th>
-          <th>Họ tên</th>
-          <th>Ngày sinh</th>
-          <th>Giới tính</th>
-          <th>Số CMND</th>
-          <th>Số ĐT</th>
-          <th>Quê quán</th>
-          <th>Chức vụ</th>
-          <th>Phụ cấp</th>
-          <th>Lương</th>
-          <th>Ảnh</th>
-          <th>In</th>
-        </tr>
-      </tfoot>
-    </table>
+                <thead>
+                 <tr>
+                  <th>ID</th>
+                  <th>Ngày bán</th>
+                  <th>Tên xe</th>
+                  <th>Màu xe</th>
+                  <th>Đơn giá</th>
+                  <th>SL</th>
+                  <th>Thuế VAT</th>
+                  <th>Thành tiền</th>
+                  <th>Hình ảnh</th>
+                  <th>Tên KH</th>
+                  <th>Địa chỉ</th>
+                  <th>In</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach($hoadonbanxemay as $hoadonbanxemay)
+                <tr>
+                  <td>{{ $hoadonbanxemay->id }}</td>
+                  <td>{{ $hoadonbanxemay->ngayban }}</td>
+                  <td>{{ $hoadonbanxemay->tenxe }}</td>
+                  <td>{{ $hoadonbanxemay->mauxe }}</td>
+                  <td>{{ number_format($hoadonbanxemay->dongia , 0, '', '.') }}đ</td>
+                  <td>{{ $hoadonbanxemay->soluong }}</td>
+                  <td>{{ $hoadonbanxemay->thueVAT }}</td>
+                  <td>{{ number_format(($hoadonbanxemay->dongia + $hoadonbanxemay->dongia * $hoadonbanxemay->thueVAT / 100) * $hoadonbanxemay->soluong , 0, '', '.') }}đ</td>
+                  <td>
+                    <a href="uploads/xemay/{{ $hoadonbanxemay->img }}"><img src="uploads/xemay/{{ $hoadonbanxemay->img }}" width="100" height="60"></a>
+                  </td>
+                  <td>{{ $hoadonbanxemay->tenkhachhang }}</td>
+                  <td>{{ $hoadonbanxemay->diachi }}</td>
+                   <td>
+                     <a class="btn btn-warning" href="hoadonbanxemay/in/{{ $hoadonbanxemay->id }}" target="blank">
+                      <i class="fa fa-print"></i>
+                    </a>
+                  </td>
+                </tr>
+                @endforeach
+                </tbody>
+                <tfoot>
+                <tr>
+                  <th>ID</th>
+                  <th>Ngày bán</th>
+                  <th>Tên xe</th>
+                  <th>Màu xe</th>
+                  <th>Đơn giá</th>
+                  <th>SL</th>
+                  <th>Thuế VAT</th>
+                  <th>Thành tiền</th>
+                  <th>Hình ảnh</th>
+                  <th>Tên KH</th>
+                  <th>Địa chỉ</th>
+                  <th>In</th>
+                </tr>
+                </tfoot>
+              </table>
     <div class="col-md-10">
         @if(!empty($sum))
-      <p style="font-size: 1.5em; color: red;">Tổng số lượng nhân viên: {{ $sum }} <br> Chiếm tỉ lệ {{ $tile }}% tổng số nhân viên</p>
-      @endif
-      </div>
+        <p style="font-size: 1.5em; color: red;">Tổng số lượng xe: {{ $sum }}</p>
+        <p style="font-size: 1.5em; color: red;">Tổng thành tiền: {{ number_format($tongthanhtien, 0,'', '.') }}đ</p>
+        @endif
+    </div>
   </div>
   <!-- /.box-body -->
 </div>
