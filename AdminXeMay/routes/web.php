@@ -145,7 +145,7 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::post('hoadonbanxemay/them', 'HoaDonBanXeMayController@postThem');
     Route::get('hoadonbanxemay/xoa/{id}', 'HoaDonBanXeMayController@getXoa');
     Route::get('hoadonbanxemay/viewPDF', 'HoaDonBanXeMayController@getViewPDF');
-    // Route::get('hoadonbanxemay/in/{id}', 'HoaDonBanXeMayController@getIn');
+    Route::get('hoadonbanxemay/in/{id}', 'HoaDonBanXeMayController@getIn');
     /*Tháng hiện tại*/
     Route::get('hoadonbanxemay/xemThangHienTaiDanhSachTenXePDF', 'HoaDonBanXeMayController@getxemThangHienTaiDanhSachTenXePDF');
     Route::get('hoadonbanxemay/xemThangHienTaiDanhSachTheoNgayPDF', 'HoaDonBanXeMayController@getxemThangHienTaiDanhSachTheoNgayPDF');
@@ -156,6 +156,26 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
     Route::get('hoadonbanxemay/xemThongKeNamHienTaiTenXePDF', 'HoaDonBanXeMayController@getxemThongKeNamHienTaiTenXePDF');
     Route::get('hoadonbanxemay/xemNamHienTaiDanhSachTheoThangPDF', 'HoaDonBanXeMayController@getxemNamHienTaiDanhSachTheoThangPDF');
     Route::get('hoadonbanxemay/xemThongKeNamHienTaiTheoThangPDF', 'HoaDonBanXeMayController@getxemThongKeNamHienTaiTheoThangPDF');
+    /*Tháng bất kỳ*/
+    Route::get('hoadonbanxemay/xemTheoThangDanhSachTenXePDF/thang{thang}/nam{nam}', 'HoaDonBanXeMayController@getxemTheoThangDanhSachTenXePDF');
+    Route::get('hoadonbanxemay/xemThongKeThangBatKyTenXePDF/{thang}/{nam}', 'HoaDonBanXeMayController@getxemThongKeThangBatKyTenXePDF');
+    Route::get('hoadonbanxemay/xemTheoThangDanhSachTheoNgayPDF/{thang}/{nam}', 'HoaDonBanXeMayController@getxemTheoThangDanhSachTheoNgayPDF');
+    Route::get('hoadonbanxemay/xemThongKeThangBatKyTheoNgayPDF', 'HoaDonBanXeMayController@getxemThongKeThangBatKyTheoNgayPDF');
+    /*Tháng quý*/
+    Route::get('hoadonbanxemay/xemTheoQuyDanhSachTenXePDF/{quy}/{nam}', 'HoaDonBanXeMayController@getxemTheoQuyDanhSachTenXePDF');
+    Route::get('hoadonbanxemay/xemThongKeQuyTenXePDF/{quy}/{nam}', 'HoaDonBanXeMayController@getxemThongKeQuyTenXePDF');
+    Route::get('hoadonbanxemay/xemTheoQuyDanhSachTheoNgayPDF/{quy}/{nam}', 'HoaDonBanXeMayController@getxemTheoQuyDanhSachTheoNgayPDF');
+    Route::get('hoadonbanxemay/xemThongKeQuyTheoNgayPDF', 'HoaDonBanXeMayController@getxemThongKeQuyTheoNgayPDF');
+    /*Tháng năm*/
+    Route::get('hoadonbanxemay/xemTheoNamDanhSachTenXePDF/{nam}', 'HoaDonBanXeMayController@getxemTheoNamDanhSachTenXePDF');
+    Route::get('hoadonbanxemay/xemThongKeNamTenXePDF/{nam}', 'HoaDonBanXeMayController@getxemThongKeNamTenXePDF');
+    Route::get('hoadonbanxemay/xemTheoNamDanhSachTheoNgayPDF/{nam}', 'HoaDonBanXeMayController@getxemTheoNamDanhSachTheoNgayPDF');
+    Route::get('hoadonbanxemay/xemThongKeNamTheoNgayPDF', 'HoaDonBanXeMayController@getxemThongKeNamTheoNgayPDF');
+    /*Khoảng thời gian*/
+    Route::get('hoadonbanxemay/xemTheoKhoangThoiGianDanhSachTenXePDF/{tungay}/{denngay}', 'HoaDonBanXeMayController@getxemTheoKhoangThoiGianDanhSachTenXePDF');
+    Route::get('hoadonbanxemay/xemThongKeKhoangThoiGianTenXePDF/{tungay}/{denngay}', 'HoaDonBanXeMayController@getxemThongKeKhoangThoiGianTenXePDF');
+    Route::get('hoadonbanxemay/xemTheoKhoangThoiGianDanhSachTheoNgayPDF/{tungay}/{denngay}', 'HoaDonBanXeMayController@getxemTheoKhoangThoiGianDanhSachTheoNgayPDF');
+    Route::get('hoadonbanxemay/xemThongKeKhoangThoiGianTheoNgayPDF', 'HoaDonBanXeMayController@getxemThongKeKhoangThoiGianTheoNgayPDF');
     
     Route::get('hoadonbanphutungphukien', 'HoaDonBanPhuTungPhuKienController@index');
     Route::get('hoadonbanphutungphukien/sua/{id}', 'HoaDonBanPhuTungPhuKienController@getSua');
@@ -264,9 +284,35 @@ Route::group(['prefix'=>'/', 'middleware' => 'AccountMiddleware'], function(){
             Route::post('namhientaitheotenxe', 'HoaDonBanXeMayController@postNamHienTaiTheoTenXe');
             Route::get('namhientaitheothang', 'HoaDonBanXeMayController@getNamHienTaiTheoThang');
             Route::post('namhientaitheothang', 'HoaDonBanXeMayController@postNamHienTaiTheoThang');
-             /* Thống kê theo tháng */
+            /* Thống kê theo tháng */
             Route::get('chonthang', 'HoaDonBanXeMayController@getChonThang');
             Route::post('chonthang', 'HoaDonBanXeMayController@postChonThang');
+            Route::get('thangbatkytheotenxe/{thang}/{nam}', 'HoaDonBanXeMayController@getThangBatKyTheoTenXe');
+            Route::post('thangbatkytheotenxe/{thang}/{nam}', 'HoaDonBanXeMayController@postThangBatKyTheoTenXe');
+            Route::get('thangbatkytheongay/{thang}/{nam}', 'HoaDonBanXeMayController@getThangBatKyTheoNgay');
+            Route::post('thangbatkytheongay/{thang}/{nam}', 'HoaDonBanXeMayController@postThangBatKyTheoNgay');
+            /* Thống kê theo quý */
+            Route::get('chonquy', 'HoaDonBanXeMayController@getChonQuy');
+            Route::post('chonquy', 'HoaDonBanXeMayController@postChonQuy');
+            Route::get('quytheotenxe/{quy}/{nam}', 'HoaDonBanXeMayController@getQuyTheoTenXe');
+            Route::post('quytheotenxe/{quy}/{nam}', 'HoaDonBanXeMayController@postQuyTheoTenXe');
+            Route::get('quytheongay/{quy}/{nam}', 'HoaDonBanXeMayController@getQuyTheoNgay');
+            Route::post('quytheongay/{quy}/{nam}', 'HoaDonBanXeMayController@postQuyTheoNgay');
+            /* Thống kê theo năm */
+            Route::get('chonnam', 'HoaDonBanXeMayController@getChonNam');
+            Route::post('chonnam', 'HoaDonBanXeMayController@postChonNam');
+            Route::get('namtheotenxe/{nam}', 'HoaDonBanXeMayController@getNamTheoTenXe');
+            Route::post('namtheotenxe/{nam}', 'HoaDonBanXeMayController@postNamTheoTenXe');
+            Route::get('namtheongay/{nam}', 'HoaDonBanXeMayController@getNamTheoNgay');
+            Route::post('namtheongay/{nam}', 'HoaDonBanXeMayController@postNamTheoNgay');
+            /* Thống kê theo khoảng thời gian */
+            Route::get('chonkhoangthoigian', 'HoaDonBanXeMayController@getChonKhoangThoiGian');
+            Route::get('khoangthoigian/{tungay}/{denngay}', 'HoaDonBanXeMayController@getKhoangThoiGian');
+            // Route::post('chonnam', 'HoaDonBanXeMayController@postChonNam');
+            Route::get('khoangthoigiantheotenxe/{tungay}/{denngay}', 'HoaDonBanXeMayController@getKhoangThoiGianTheoTenXe');
+            Route::post('khoangthoigiantheotenxe/{tungay}/{denngay}', 'HoaDonBanXeMayController@postKhoangThoiGianTheoTenXe');
+            Route::get('khoangthoigiantheongay/{tungay}/{denngay}', 'HoaDonBanXeMayController@getKhoangThoiGianTheoNgay');
+            Route::post('khoangthoigiantheongay/{tungay}/{denngay}', 'HoaDonBanXeMayController@postKhoangThoiGianTheoNgay');
 
         });
     });

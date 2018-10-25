@@ -11,11 +11,11 @@
   <!-- Content Header (Page header) -->
    <section class="content-header">
     <h1>
-      <b>THỐNG KÊ HÓA ĐƠN BÁN XE MÁY THÁNG {{ $thang }} NĂM {{ $nam }}</b>
+      <b>THỐNG KÊ HÓA ĐƠN BÁN XE MÁY NĂM {{ $nam }}</b>
     </h1>
     <ol class="breadcrumb">
       <li><a href="#"><i class="fa fa-dashboard"></i>Admin</a></li>
-      <li>Thống kê hóa đơn bán xe máy tháng {{ $thang }} năm {{ $nam }}</li>
+      <li>Thống kê hóa đơn bán xe máy năm {{ $nam }}</li>
     </ol>
   </section>
 
@@ -39,36 +39,11 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-12">
-                <form action="thongke/hoadonbanxemay/chonthang" method="post" enctype="application/x-www-form-urlencoded">
+                <form action="thongke/hoadonbanxemay/chonnam" method="post" enctype="application/x-www-form-urlencoded">
                 @csrf
                 <div class="row">
-                      <div class="col-md-1"></div>
-                    <div class="col-md-2">
-                      <div class="form-group">
-                        <div style="font-size: 1.3em; font-weight: bold; text-align: right;">
-                          <label>
-                            Chọn tháng
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+                      <div class="col-md-2"></div>
                     <!-- /.col -->
-
-                    <div class="col-md-2">
-                      <div class="form-group">
-                        <select class="form-control" name="thang" required="">
-                          <option value="">Chọn</option>
-                          @for ($i = 1; $i <= 12; $i++)
-                          @if($thang == $i)
-                          <option value="{{ $i }}" selected="">{{ $i }}</option>
-                          @else
-                          <option value="{{ $i }}">{{ $i }}</option>
-                          @endif
-                          @endfor
-                        </select>
-                      </div>
-                    </div>
-
                     <div class="col-md-2">
                       <div class="form-group">
                         <div style="font-size: 1.3em; font-weight: bold; text-align: right;">
@@ -99,7 +74,7 @@
                     <div class="col-md-1">
                        <button type="submit" class="btn btn-primary">THỐNG KÊ</button>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-5">
                       
                     </div>
                     <!-- /.col -->
@@ -122,7 +97,7 @@
        <!-- Default box -->
     <div class="box">
       <div class="box-header with-border">
-        <h1 class="box-title"><b>XE MÁY BÁN THÁNG {{ $thang }} NĂM {{ $nam }} THEO TÊN XE</b></h1>
+        <h1 class="box-title"><b>XE MÁY BÁN QUÝ NĂM {{ $nam }} THEO TÊN XE</b></h1>
           
        <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -135,16 +110,16 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-12">
-                {!! $chartThang->container() !!}
+                {!! $chartTen->container() !!}
             </div>
-            {!! $chartThang->script() !!}
+            {!! $chartTen->script() !!}
           </div>
         </div>
         <!-- /.box-body -->
           <div class="box-footer">
-           <a href="thongke/hoadonbanxemay/thangbatkytheotenxe/{{$thang}}/{{$nam}}" class="btn btn-success">Chi tiết</a>
+           <a href="thongke/hoadonbanxemay/namtheotenxe/{{$nam}}" class="btn btn-success">Chi tiết</a>
            <div class="pull-right">
-              <a class="btn btn-warning" href="hoadonbanxemay/xemTheoThangDanhSachTenXePDF/thang{{$thang}}/nam{{$nam}}" target="blank">
+              <a class="btn btn-warning" href="hoadonbanxemay/xemTheoNamDanhSachTenXePDF/{{$nam}}" target="blank">
                 <i class="fa fa-print"></i> In toàn bộ
               </a>
             </div>
@@ -159,7 +134,7 @@
        <!-- Default box -->
     <div class="box">
       <div class="box-header with-border">
-        <h1 class="box-title"><b>XE MÁY BÁN THÁNG {{ $thang }} NĂM {{ $nam }} THEO TỪNG NGÀY</b></h1>
+        <h1 class="box-title"><b>XE MÁY BÁN NĂM {{ $nam }} THEO TỪNG NGÀY</b></h1>
           
         <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -172,17 +147,17 @@
         <div class="box-body">
           <div class="row">
             <div class="col-md-12">
-                {!! $chartThangTheoNgay->container() !!}
+                {!! $chartNgay->container() !!}
             </div>
-            {!! $chartThangTheoNgay->script() !!}
+            {!! $chartNgay->script() !!}
 
           </div>
         </div>
         <!-- /.box-body -->
           <div class="box-footer">
-           <a href="thongke/hoadonbanxemay/thangbatkytheongay/{{$thang}}/{{$nam}}" class="btn btn-success">Chi tiết</a>
+           <a href="thongke/hoadonbanxemay/namtheongay/{{$nam}}" class="btn btn-success">Chi tiết</a>
            <div class="pull-right">
-              <a class="btn btn-warning" href="hoadonbanxemay/xemTheoThangDanhSachTheoNgayPDF/{{$thang}}/{{$nam}}" target="blank">
+              <a class="btn btn-warning" href="hoadonbanxemay/xemTheoNamDanhSachTheoNgayPDF/{{$nam}}" target="blank">
                 <i class="fa fa-print"></i> In toàn bộ
               </a>
             </div>
@@ -192,12 +167,12 @@
       <!-- /.box -->
       </div>
       <!-- /.col-md -->
-    
+
       <div class="col-md-12">
        <!-- Default box -->
     <div class="box">
       <div class="box-header with-border">
-        <h1 class="box-title"><b>DANH SÁCH XE MÁY BÁN THÁNG {{ $thang }} NĂM {{ $nam }}</b></h1>
+        <h1 class="box-title"><b>DANH SÁCH XE MÁY BÁN NĂM {{ $nam }}</b></h1>
           
        <div class="box-tools pull-right">
           <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
