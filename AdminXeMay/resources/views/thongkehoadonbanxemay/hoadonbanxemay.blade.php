@@ -45,9 +45,9 @@
                 <a href="thongke/hoadonbanxemay/thanghientai" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THÁNG HIỆN TẠI</a>
                 <a href="thongke/hoadonbanxemay/namhientai" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN NĂM HIỆN TẠI</a>
                 <a href="thongke/hoadonbanxemay/chonthang" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO THÁNG</a>
-                <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO QUÝ</a>
-                <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO NĂM</a>
-                <a href="" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO KHOẢNG THỜI GIAN</a>
+                <a href="thongke/hoadonbanxemay/chonquy" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO QUÝ</a>
+                <a href="thongke/hoadonbanxemay/chonnam" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO NĂM</a>
+                <a href="thongke/hoadonbanxemay/chonkhoangthoigian" class="btn btn-success btn-block" style="font-size: 1.3em; margin-bottom: 1em;">XE MÁY BÁN THEO KHOẢNG THỜI GIAN</a>
                 </div>
               </div>
             </div>
